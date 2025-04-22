@@ -6,6 +6,7 @@ import './App.css'
 import Home from './pages/Home'
 import Friends from './pages/Friends'
 import Books from './pages/Books'
+import Footer from './components/Footer'
 
 
 function App() {
@@ -18,8 +19,7 @@ function App() {
           <Route path="/freunde"  element={<Friends />}/>
           <Route path="/buecher"  element={<Books/>}/>
         </Routes>
-      </div>
-
+      {/* <Footer/> */}
     </>
   )
 }

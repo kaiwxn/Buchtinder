@@ -1,3 +1,4 @@
+import { BookCheck } from "lucide-react";
 import { Link } from "react-router";
 
 function Navbar() {
@@ -5,31 +6,16 @@ function Navbar() {
 		<>
 			<div className="navbar bg-base-100 drop-shadow">
 				<div className="flex-none">
-					<button className="btn btn-square btn-ghost">
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							fill="none"
-							viewBox="0 0 24 24"
-							className="inline-block h-5 w-5 stroke-current"
-						>
-							{" "}
-							<path
-								strokeLinecap="round"
-								strokeLinejoin="round"
-								strokeWidth="2"
-								d="M4 6h16M4 12h16M4 18h16"
-							></path>{" "}
-						</svg>
-					</button>
+                    <BookCheck size={36}/>
 				</div>
 
-				<div className="btn btn-ghost flex-none p-3">
-					<Link to="/">Home</Link>
+				<div className="btn btn-ghost flex-none p-3 text-xl">
+					<Link to="/">Start</Link>
 				</div>
-				<div className="btn btn-ghost flex-none p-3">
+				<div className="btn btn-ghost flex-none p-3 text-xl">
 					<Link to="/freunde">Freunde</Link>
 				</div>
-				<div className="btn btn-ghost flex-none p-3">
+				<div className="btn btn-ghost flex-none p-3 text-xl">
 					<Link to="/buecher">Bücher</Link>
 				</div>
                 <div className="flex-1">
@@ -38,7 +24,7 @@ function Navbar() {
                 <div className="btn btn-outline mr-3 ">
                     <p> Abmelden </p>
                 </div>
-				<div className="dropdown dropdown-end flex-">
+				<div className="dropdown dropdown-end mr-3">
 					<div
 						tabIndex={0}
 						role="button"
