@@ -2,8 +2,8 @@
 
 function Books(){
     return (
-        <div>
-            <h1>Books Page</h1>
+        <div className="flex items-top justify-center min-h-screen mt-10">
+            <h1 className="text-4xl">Books Page</h1>
             <p>Welcome to the Books page!</p>
         </div>
     );

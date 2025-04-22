@@ -2,8 +2,8 @@
 
 function Friends(){
     return (
-        <div>
-            <h1>Friends Page</h1>
+        <div className="flex items-top justify-center min-h-screen mt-10">
+            <h1 className="text-4xl">Friends Page</h1>
             <p>Welcome to the Friends page!</p>
         </div>
     );
