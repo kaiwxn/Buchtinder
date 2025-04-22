@@ -5,25 +5,23 @@ function Navbar() {
 	return (
 		<>
 			<div className="navbar bg-base-100 drop-shadow">
-				<div className="flex-none">
-                    <BookCheck size={36}/>
+				<div className="flex-none mr-4">
+					<BookCheck size={36} />
 				</div>
 
-				<div className="btn btn-ghost flex-none p-3 text-xl">
-					<Link to="/">Start</Link>
+				<div className="flex-none p-3 text-xl font-medium">
+					<Link className="hover:underline hover:underline-offset-4" to="/">Start</Link>
 				</div>
-				<div className="btn btn-ghost flex-none p-3 text-xl">
-					<Link to="/freunde">Freunde</Link>
+				<div className="flex-none p-3 text-xl font-medium">
+					<Link className="hover:underline hover:underline-offset-4" to="/freunde">Freunde</Link>
 				</div>
-				<div className="btn btn-ghost flex-none p-3 text-xl">
-					<Link to="/buecher">Bücher</Link>
+				<div className="flex-none p-3 text-xl font-medium">
+					<Link className="hover:underline hover:underline-offset-4" to="/buecher">Bücher</Link>
 				</div>
-                <div className="flex-1">
-
-                </div>
-                <div className="btn btn-outline mr-3 ">
-                    <p> Abmelden </p>
-                </div>
+				<div className="flex-1"></div>
+				<div className="btn btn-outline mr-3 ">
+					<p> Abmelden </p>
+				</div>
 				<div className="dropdown dropdown-end mr-3">
 					<div
 						tabIndex={0}
