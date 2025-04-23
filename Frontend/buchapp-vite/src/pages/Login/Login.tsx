@@ -9,13 +9,13 @@ function Login() {
 				</div>
 			</div>
 			<div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
-				<div className="sm:mx-auto sm:w-full sm:max-w-sm">
-					<h1 className="mt-10 text-3xl/8">Dein nächstes Buch wartet schon.</h1>
+				<div className="sm:mx-auto sm:w-full sm:max-w-96">
+					<h1 className="mt-10 text-[33px]/8 w-full">Dein nächstes Buch wartet schon.</h1>
 					<p className="mt-3 text-2xl text-gray-600">Melde dich zuerst an.</p>
 				</div>
 
-				<div className="mt-5 sm:mx-auto sm:w-full sm:max-w-sm">
-					<label className="input validator">
+				<div className="sm:mx-auto sm:w-full sm:max-w-sm">
+					<label className="input validator mt-6 w-full">
 						<svg
 							className="h-[1em] opacity-50"
 							xmlns="http://www.w3.org/2000/svg"
@@ -37,14 +37,14 @@ function Login() {
 							required
 							placeholder="Username"
 							pattern="[A-Za-z][A-Za-z0-9\-]*"
-							minlength="3"
+							minLength={3}
 							maxlength="30"
 							title="Only letters, numbers or dash"
+							className="w-full"
 						/>
 					</label>
 					
-
-					<label className="input validator mt-3">
+					<label className="input validator mt-6 w-full">
 						<svg
 							className="h-[1em] opacity-50"
 							xmlns="http://www.w3.org/2000/svg"
@@ -65,12 +65,20 @@ function Login() {
 							type="password"
 							required
 							placeholder="Password"
-							minlength="8"
+							minLength={8}
 							pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
 							title="Must be more than 8 characters, including number, lowercase letter, uppercase letter"
+							className="w-full"
 						/>
 					</label>
 					
+					<div className="flex mt-6 w-full justify-between">
+						<button className="btn w-45">Login</button>
+						<button className="btn w-45 bg-blue-500 text-white">Registrieren</button>
+					</div>
+					<div className="flex mt-6 justify-center text-center mx-20">
+						<p className="text-xs">Indem du fortfährst, erklärst du, dass du <span className="underline">diesen Bedingungen</span> zustimmst.</p>
+					</div>
 				</div>
 			</div>
 		</>

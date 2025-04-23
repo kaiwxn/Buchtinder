@@ -7,7 +7,7 @@ import Home from './pages/Home'
 import Friends from './pages/Friends'
 import Books from './pages/Books'
 import Footer from './components/Footer'
-import Login from './pages/Login'
+import Login from './pages/Login/Login'
 
 function App() {
 
