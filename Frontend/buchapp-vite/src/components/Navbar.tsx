@@ -1,13 +1,14 @@
 import { BookCheck } from "lucide-react";
 import { Link } from "react-router";
 
+	
 function Navbar() {
 	const navLinks = [
 		{ to: "/", label: "Start" },
 		{ to: "/freunde", label: "Freunde" },
 		{ to: "/buecher", label: "Bücher" },
 	];
-	
+
 	return (
 		<div className="navbar bg-base-100 drop-shadow">
 			<div className="flex-none mr-4">
