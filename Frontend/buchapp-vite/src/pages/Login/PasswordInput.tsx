@@ -1,31 +1,35 @@
+import { Eye, EyeOff, KeyRound} from "lucide-react";
+import { useState } from "react";
+
 function PasswordInput() {
+	const [hidden, setHidden] = useState(true);
+
 	return (
-		<label className="input validator mt-6 w-full">
-			<svg
-				className="h-[1em] opacity-50"
-				xmlns="http://www.w3.org/2000/svg"
-				viewBox="0 0 24 24"
-			>
-				<g
-					strokeLinejoin="round"
-					strokeLinecap="round"
-					strokeWidth="2.5"
-					fill="none"
-					stroke="currentColor"
+		<label className="input validator input-accent mt-6 w-full">
+			<KeyRound color="#6a7282" size={15} />
+			<div className="relative w-full">
+				<input
+					type={hidden ? "password" : "text"}
+					required
+					placeholder="Password"
+					minLength={6}
+					maxLength={30}
+					pattern="[A-Za-z0-9!@#$%^&*()_+]*"
+					title="Password input field"
+					className="w-full pr-10"
+				/>
+				<button
+					type="button"
+					onClick={() => setHidden(!hidden)}
+					className="absolute inset-y-0 right-0 flex items-center px-3 text-gray-500"
 				>
-					<path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z"></path>
-					<circle cx="16.5" cy="7.5" r=".5" fill="currentColor"></circle>
-				</g>
-			</svg>
-			<input
-				type="password"
-				required
-				placeholder="Password"
-				minLength={8}
-				pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
-				title="Must be more than 8 characters, including number, lowercase letter, uppercase letter"
-				className="w-full"
-			/>
+					{hidden ? (
+						<Eye color="#6a7282" size={20} />
+					) : (
+						<EyeOff color="#6a7282" size={20} />
+					)}
+				</button>
+			</div>
 		</label>
 	);
 }
