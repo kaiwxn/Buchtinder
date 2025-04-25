@@ -1,17 +1,32 @@
+import { useState } from "react";
 import { BookCheck } from "lucide-react";
 import PasswordInput from "./PasswordInput";
 import UsernameInput from "./UsernameInput";
+
+import { loginUser, registerUser } from "./requests";
+import { useNavigate } from "react-router";
 
 type LoginProps = {
 	setToken: (token: string) => void;
 };
 
-function Login({ setToken }: LoginProps) { 
+function Login({ setToken }: LoginProps) {
+	const [username, setUsername] = useState("");
+	const [password, setPassword] = useState("");
 
 	async function handleLogin() {
-		const token = "yourUserToken";
-		setToken(token); // This updates App state and sessionStorage
-	};
+		const token = "";
+		setToken(token);
+
+		const data = await loginUser(username, password);
+		alert(data.message)
+		
+	}
+
+	async function handleRegister() {
+		const data = await registerUser(username, password);
+		console.log(data);
+	}
 
 	return (
 		<>
@@ -29,15 +44,14 @@ function Login({ setToken }: LoginProps) {
 				</div>
 
 				<div className="sm:mx-auto sm:w-full sm:max-w-sm">
-					<UsernameInput />
-
-					<PasswordInput />
+					<UsernameInput value={username} onChange={setUsername} />
+					<PasswordInput value={password} onChange={setPassword} />
 
 					<div className="flex mt-6 w-full justify-between">
 						<button className="btn w-45" onClick={handleLogin}>
 							Login
 						</button>
-						<button className="btn w-45 bg-blue-500 text-white">
+						<button className="btn w-45 bg-blue-500 text-white" onClick={handleRegister}>
 							Registrieren
 						</button>
 					</div>

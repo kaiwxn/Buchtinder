@@ -1,12 +1,14 @@
 from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase
+from flask_cors import CORS
 import sqlite3
 import hashlib
 import os
 
 
 app = Flask(__name__)
+CORS(app)
 app.debug = True
 
 class Base(DeclarativeBase):
@@ -61,8 +63,10 @@ def registerUser():
 @app.post('/login')
 def loginUser():
 
-    name = request.form.get("name")
-    password = request.form.get("password")
+    data = request.get_json()
+
+    name = data.get("name")
+    password = data.get("password")
 
     if not name or not password:
         return {"error": "Name and password are required"}, 400
