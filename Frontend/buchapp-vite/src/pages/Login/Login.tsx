@@ -4,7 +4,7 @@ import PasswordInput from "./PasswordInput";
 import UsernameInput from "./UsernameInput";
 
 import { loginUser, registerUser } from "./requests";
-import { useNavigate } from "react-router";
+
 
 type LoginProps = {
 	setToken: (token: string) => void;
@@ -15,12 +15,13 @@ function Login({ setToken }: LoginProps) {
 	const [password, setPassword] = useState("");
 
 	async function handleLogin() {
-		const token = "";
-		setToken(token);
-
 		const data = await loginUser(username, password);
-		alert(data.message)
-		
+
+		if (!data.error) {
+			setToken("irgendwas");
+		} else {
+			alert(data.error);
+		}
 	}
 
 	async function handleRegister() {
@@ -51,7 +52,10 @@ function Login({ setToken }: LoginProps) {
 						<button className="btn w-45" onClick={handleLogin}>
 							Login
 						</button>
-						<button className="btn w-45 bg-blue-500 text-white" onClick={handleRegister}>
+						<button
+							className="btn w-45 bg-blue-500 text-white"
+							onClick={handleRegister}
+						>
 							Registrieren
 						</button>
 					</div>
