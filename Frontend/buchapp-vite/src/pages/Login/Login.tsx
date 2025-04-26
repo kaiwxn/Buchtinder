@@ -2,9 +2,7 @@ import { useState } from "react";
 import { BookCheck } from "lucide-react";
 import PasswordInput from "./PasswordInput";
 import UsernameInput from "./UsernameInput";
-
-import { loginUser, registerUser } from "./requests";
-
+import { login, register } from "./requests";
 
 type LoginProps = {
 	setToken: (token: string) => void;
@@ -13,20 +11,38 @@ type LoginProps = {
 function Login({ setToken }: LoginProps) {
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
+	const [loading, setLoading] = useState(false);
 
 	async function handleLogin() {
-		const data = await loginUser(username, password);
-
-		if (!data.error) {
-			setToken("irgendwas");
-		} else {
-			alert(data.error);
+		setLoading(true);
+		try {
+			const data = await login(username, password);
+			setToken("irgendwas"); // TODO: change token
+		} catch (error: any) {
+			console.error("Fehler bei Login:", error);
+			alert(
+				error.message ||
+					"Verbindungsfehler. Bitte versuche es später noch einmal."
+			);
+		} finally {
+			setLoading(false);
 		}
 	}
 
 	async function handleRegister() {
-		const data = await registerUser(username, password);
-		console.log(data);
+		setLoading(true);
+		try {
+			const data = await register(username, password);
+			setToken("irgendwas");
+		} catch (error: any) {
+			console.error("Fehler bei Registrierung:", error);
+			alert(
+				error.message ||
+					"Verbindungsfehler. Bitte versuche es später noch einmal."
+			);
+		} finally {
+			setLoading(false);
+		}
 	}
 
 	return (
@@ -49,21 +65,33 @@ function Login({ setToken }: LoginProps) {
 					<PasswordInput value={password} onChange={setPassword} />
 
 					<div className="flex mt-6 w-full justify-between">
-						<button className="btn w-45" onClick={handleLogin}>
+						<button
+							className="btn w-45"
+							onClick={handleLogin}
+							disabled={loading}
+						>
 							Login
 						</button>
 						<button
 							className="btn w-45 bg-blue-500 text-white"
 							onClick={handleRegister}
+							disabled={loading}
 						>
 							Registrieren
 						</button>
 					</div>
 					<div className="flex mt-6 justify-center text-center mx-20">
-						<p className="text-xs">
+						<a className="text-xs">
 							Indem du fortfährst, erklärst du, dass du{" "}
-							<span className="underline">diesen Bedingungen</span> zustimmst.
-						</p>
+							<a
+								className="underline"
+								href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+								target="_blank"
+							>
+								diesen Bedingungen
+							</a>{" "}
+							zustimmst.
+						</a>
 					</div>
 				</div>
 			</div>

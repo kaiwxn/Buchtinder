@@ -36,18 +36,21 @@ def get_users():
 
 @app.post('/register')
 def registerUser():
-    name = request.form.get('name')
-    password = request.form.get('password')
+
+    data = request.get_json()
+
+    name = data.get("name")
+    password = data.get("password")
 
     if not name or not password:
-        return {"error": "Name and password are required"}, 400
+        return {"message": "Name and password are required"}, 400
 
     db = get_db_connection()
 
     # Retrieve the user from the database to check if the name already exists
     userExists = db.execute('SELECT * FROM Users WHERE name = ?', (name,)).fetchone()
     if userExists:
-        return {"error": "User already exists"}, 400
+        return {"message": "User already exists"}, 400
     
     # Store the salt and hashed password in the database
     salt = os.urandom(16)
@@ -60,6 +63,7 @@ def registerUser():
     # Return session token
     return {"message": "User registered successfully"}, 201
 
+
 @app.post('/login')
 def loginUser():
 
@@ -69,14 +73,14 @@ def loginUser():
     password = data.get("password")
 
     if not name or not password:
-        return {"error": "Name and password are required"}, 400
+        return {"message": "Name and password are required"}, 400
     
     db = get_db_connection()
     dbUser = db.execute('SELECT * FROM Users WHERE name = ?', (name,)).fetchone()
 
     if dbUser is None:
         db.close()
-        return {"error": "User not found"}, 404
+        return {"message": "User not found"}, 404
 
     dbPassword, dbSalt = db.execute('SELECT password, salt FROM Users WHERE name = ?', (name,)).fetchone()
 
@@ -85,6 +89,6 @@ def loginUser():
     hashedPassword = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), dbSalt, 100000)
 
     if hashedPassword != dbPassword:
-        return {"error": "Invalid credentials"}, 401
+        return {"message": "Invalid credentials"}, 401
     
     return {"message": "Login successful"}, 200
