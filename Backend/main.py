@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase
 from flask_cors import CORS
@@ -6,32 +6,46 @@ import sqlite3
 import hashlib
 import os
 
+from models import Base, Users
 
 app = Flask(__name__)
-CORS(app)
 app.debug = True
+CORS(app)
 
-class Base(DeclarativeBase):
-  pass
-
-db = SQLAlchemy(model_class=Base)
+# Database setup
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///project.db"
+db = SQLAlchemy(model_class=Base)
 db.init_app(app)
 
-def get_db_connection():
-    db = sqlite3.connect('project.db')
-    db.row_factory = sqlite3.Row # Lets you manage rows like dicts 
-    return db
+with app.app_context():
+    # If models.py was changed, this line should be uncommented 
+    # in order to update all tables. All datasets get reset.
+    # db.drop_all() 
+    db.create_all()  
 
 
 @app.route('/get_users', methods=['GET'])
 def get_users():
-    db = get_db_connection()
-    users = db.execute('SELECT * FROM Users').fetchall()
-    db.close()
+    users = list(db.session.query(Users).all())
+    return jsonify([[user.name, user.created_at] for user in users])
 
-    return [(row["name"]) for row in users]
+@app.post('/create_user')
+def create_user():
+    data = request.get_json()
 
+    name = data.get("name")
+    password = data.get("password")
+    salt = data.get("salt")
+
+    if not name or not password or not salt:
+        return {"message": "Wrong data format!"}, 400
+
+    newUser = Users(name=name, password=password, salt=salt)
+    db.session.add(newUser)
+    db.session.commit()
+    db.session.refresh(newUser)
+
+    return jsonify({"message": "User created successfully", "user_id": newUser.id}), 201
 
 
 @app.post('/register')
@@ -39,27 +53,27 @@ def registerUser():
 
     data = request.get_json()
 
-    name = data.get("name")
-    password = data.get("password")
+    name = str(data.get("name"))
+    password = str(data.get("password"))
 
     if not name or not password:
         return {"message": "Name and password are required"}, 400
 
-    db = get_db_connection()
-
     # Retrieve the user from the database to check if the name already exists
-    userExists = db.execute('SELECT * FROM Users WHERE name = ?', (name,)).fetchone()
+    userExists = db.session.query(Users).filter_by(name=name).first()
+
     if userExists:
         return {"message": "User already exists"}, 400
-    
+
     # Store the salt and hashed password in the database
     salt = os.urandom(16)
     hashed_password = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 100000)
-    
-    db.execute('INSERT INTO Users (name, password, salt) VALUES (?, ?, ?)', (name, hashed_password, salt))
-    db.commit()
-    db.close()
-    
+
+    newUser = Users(name=name, password=hashed_password, salt=salt)
+    db.session.add(newUser)
+    db.session.commit()
+    db.session.refresh(newUser)
+
     # Return session token
     return {"message": "User registered successfully"}, 201
 
@@ -69,26 +83,23 @@ def loginUser():
 
     data = request.get_json()
 
-    name = data.get("name")
-    password = data.get("password")
+    name = str(data.get("name"))
+    password = str(data.get("password"))
 
     if not name or not password:
         return {"message": "Name and password are required"}, 400
-    
-    db = get_db_connection()
-    dbUser = db.execute('SELECT * FROM Users WHERE name = ?', (name,)).fetchone()
+
+    # Retrieve first user with matching name
+    dbUser = db.session.query(Users).filter_by(name=name).first()
 
     if dbUser is None:
-        db.close()
         return {"message": "User not found"}, 404
 
-    dbPassword, dbSalt = db.execute('SELECT password, salt FROM Users WHERE name = ?', (name,)).fetchone()
-
-    db.close()
-
+    dbPassword, dbSalt = dbUser.password, dbUser.salt
+    
     hashedPassword = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), dbSalt, 100000)
 
     if hashedPassword != dbPassword:
         return {"message": "Invalid credentials"}, 401
-    
+
     return {"message": "Login successful"}, 200
