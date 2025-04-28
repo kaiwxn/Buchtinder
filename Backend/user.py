@@ -1,54 +1,16 @@
-from flask import Flask, request, jsonify
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.orm import DeclarativeBase
-from flask_cors import CORS
-import sqlite3
-import hashlib
 import os
+import hashlib
+from flask import Flask, Blueprint, request
 
-from models import Base, Users
-
-app = Flask(__name__)
-app.debug = True
-CORS(app)
-
-# Database setup
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///project.db"
-db = SQLAlchemy(model_class=Base)
-db.init_app(app)
-
-with app.app_context():
-    # If models.py was changed, this line should be uncommented 
-    # in order to update all tables. All datasets get reset.
-    # db.drop_all() 
-    db.create_all()  
+from database import db
+from models import Users
 
 
-@app.route('/get_users', methods=['GET'])
-def get_users():
-    users = list(db.session.query(Users).all())
-    return jsonify([[user.name, user.created_at] for user in users])
-
-@app.post('/create_user')
-def create_user():
-    data = request.get_json()
-
-    name = data.get("name")
-    password = data.get("password")
-    salt = data.get("salt")
-
-    if not name or not password or not salt:
-        return {"message": "Wrong data format!"}, 400
-
-    newUser = Users(name=name, password=password, salt=salt)
-    db.session.add(newUser)
-    db.session.commit()
-    db.session.refresh(newUser)
-
-    return jsonify({"message": "User created successfully", "user_id": newUser.id}), 201
+# Groups these endpoints together
+userBlueprint = Blueprint('user', __name__)
 
 
-@app.post('/register')
+@userBlueprint.post('/register')
 def registerUser():
 
     data = request.get_json()
@@ -78,7 +40,7 @@ def registerUser():
     return {"message": "User registered successfully"}, 201
 
 
-@app.post('/login')
+@userBlueprint.post('/login')
 def loginUser():
 
     data = request.get_json()
