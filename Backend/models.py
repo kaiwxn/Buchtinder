@@ -1,12 +1,9 @@
-import time
 from sqlalchemy import Column, Integer, LargeBinary, String
-from sqlalchemy.orm import DeclarativeBase
-
 from sqlalchemy import DateTime
 from datetime import datetime, timezone
 
-class Base(DeclarativeBase):
-  pass
+from database import Base
+
 
 class Users(Base):
     __tablename__ = 'Users'

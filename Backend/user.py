@@ -1,13 +1,17 @@
-import os
-import hashlib
 from flask import Flask, Blueprint, request
+import hashlib
+import os
 
-from database import db
 from models import Users
+from database import db
 
 
 # Groups these endpoints together
 userBlueprint = Blueprint('user', __name__)
+
+
+def hashPassword(password: str, salt: bytes):
+    return hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 100000)
 
 
 @userBlueprint.post('/register')
@@ -29,7 +33,7 @@ def registerUser():
 
     # Store the salt and hashed password in the database
     salt = os.urandom(16)
-    hashed_password = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 100000)
+    hashed_password = hashPassword(password, salt)
 
     newUser = Users(name=name, password=hashed_password, salt=salt)
     db.session.add(newUser)
@@ -59,9 +63,9 @@ def loginUser():
 
     dbPassword, dbSalt = dbUser.password, dbUser.salt
     
-    hashedPassword = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), dbSalt, 100000)
+    hashed_password = hashPassword(password, dbSalt)
 
-    if hashedPassword != dbPassword:
+    if hashed_password != dbPassword:
         return {"message": "Invalid credentials"}, 401
 
     return {"message": "Login successful"}, 200

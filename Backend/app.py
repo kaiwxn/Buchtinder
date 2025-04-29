@@ -1,12 +1,8 @@
 from flask import Flask, request, jsonify
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.orm import DeclarativeBase
 from flask_cors import CORS
-import hashlib
-import os
 
 from database import db
-from models import Base, Users
+from models import Users
 from Backend.user import userBlueprint
 
 
