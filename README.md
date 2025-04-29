@@ -22,6 +22,6 @@ pip install -r requirements.txt
 Das startet lokal einen Server für das Backend.
 
 ```bash
-flask --app main run --debug
+flask --app app run --debug
 ```
 

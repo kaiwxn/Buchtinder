@@ -3,7 +3,7 @@ from flask_cors import CORS
 
 from database import db
 from models import Users
-from Backend.user import userBlueprint
+from user import userBlueprint
 
 
 app = Flask(__name__)

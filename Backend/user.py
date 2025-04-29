@@ -44,10 +44,11 @@ def registerUser():
     return {"message": "User registered successfully"}, 201
 
 
-@userBlueprint.post('/login')
+@userBlueprint.post('/login') 
 def loginUser():
 
     data = request.get_json()
+
 
     name = str(data.get("name"))
     password = str(data.get("password"))
@@ -57,7 +58,7 @@ def loginUser():
 
     # Retrieve first user with matching name
     dbUser = db.session.query(Users).filter_by(name=name).first()
-
+    
     if dbUser is None:
         return {"message": "User not found"}, 404
 
