@@ -10,6 +10,7 @@ Für das Backend müssen die Dependencies durch ein Virtual Environment installi
 Diese sind in der Datei "requirements.txt" gespeichert.
 
 ```bash
+cd Backend
 python -m venv .venv
 .venv/Scripts/Activate.ps1
 pip install -r requirements.txt
@@ -22,6 +23,7 @@ pip install -r requirements.txt
 Das startet lokal einen Server für das Backend.
 
 ```bash
+cd Frontend/buchapp-vite
 flask --app main run --debug
 ```
 
