@@ -1,7 +1,12 @@
-import { Eye, EyeOff, KeyRound} from "lucide-react";
+import { Eye, EyeOff, KeyRound } from "lucide-react";
 import { useState } from "react";
 
-function PasswordInput() {
+type Props = {
+	value: string;
+	onChange: (val: string) => void;
+};
+
+function PasswordInput({ value, onChange }: Props) {
 	const [hidden, setHidden] = useState(true);
 
 	return (
@@ -11,11 +16,12 @@ function PasswordInput() {
 				<input
 					type={hidden ? "password" : "text"}
 					required
-					placeholder="Password"
+					placeholder="Passwort"
 					minLength={6}
 					maxLength={30}
-					pattern="[A-Za-z0-9!@#$%^&*()_+]*"
-					title="Password input field"
+					value={value}
+					pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,30}$" // 6-30 chars, must include at least one letter, number and special character
+					onChange={(e) => onChange(e.target.value)}
 					className="w-full pr-10"
 				/>
 				<button

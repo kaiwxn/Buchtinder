@@ -1,15 +1,24 @@
-from sqlalchemy import Column, Integer, String
-from main import Base
+from sqlalchemy import Column, Integer, LargeBinary, String
+from sqlalchemy import DateTime
+from datetime import datetime, timezone
 
-class User(Base):
-    __tablename__ = 'users'
+from database import Base
+
+
+class Users(Base):
+    __tablename__ = 'Users'
     id = Column(Integer, primary_key=True)
-    name = Column(String(50), unique=True)
-    email = Column(String(120), unique=True)
+    name = Column(String(255), unique=True, nullable=False)
+    password = Column(String(512), nullable=False)
+    salt = Column(LargeBinary, nullable=False)  
 
-    def __init__(self, name=None, email=None):
+    created_at = Column(DateTime, default=datetime.now(timezone.utc), nullable=False)
+
+    def __init__(self, name=None, password=None, salt=None):
         self.name = name
-        self.email = email
+        self.password = password
+        self.salt = salt
+        self.created_at = datetime.now(timezone.utc)
 
     def __repr__(self):
         return f'<User {self.name!r}>'

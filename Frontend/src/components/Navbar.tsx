@@ -3,6 +3,12 @@ import { Link } from "react-router";
 
 	
 function Navbar() {
+
+	async function handleLogout() {
+		sessionStorage.removeItem("token");
+		location.reload(); // Reload page 
+	}
+
 	const navLinks = [
 		{ to: "/", label: "Start" },
 		{ to: "/freunde", label: "Freunde" },
@@ -25,9 +31,9 @@ function Navbar() {
 
 			<div className="flex-1"></div>
 
-			<div className="btn btn-outline mr-3">
+			<button className="btn btn-outline mr-3" onClick={handleLogout}>
 				<p>Abmelden</p>
-			</div>
+			</button>
 
 			<div className="dropdown dropdown-end mr-3">
 				<div

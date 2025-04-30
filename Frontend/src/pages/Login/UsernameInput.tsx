@@ -1,6 +1,11 @@
 import { User } from "lucide-react";
 
-function UsernameInput() {
+type Props = {
+	value: string;
+	onChange: (val: string) => void;
+};
+
+function UsernameInput({ value, onChange }: Props) {
 	return (
 		<label className="input validator mt-6 w-full">
 			<User color="#6a7282" size={15} />
@@ -13,6 +18,8 @@ function UsernameInput() {
 				minLength={3}
 				maxLength={30}
 				title="Username input field"
+				value={value}
+				onChange={(e) => onChange(e.target.value)}
 				className="w-full"
 			/>
 		</label>
