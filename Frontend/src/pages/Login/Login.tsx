@@ -13,29 +13,16 @@ function Login({ setToken }: LoginProps) {
 	const [password, setPassword] = useState("");
 	const [loading, setLoading] = useState(false);
 
-	async function handleLogin() {
+	async function handleAuth(
+		authFunction: (username: string, password: string) => Promise<any>
+	) {
 		setLoading(true);
 		try {
-			const data = await login(username, password);
-			setToken("irgendwas"); // TODO: change token
+			// Session Token is stored in session storage
+			const data = await authFunction(username, password);
+			setToken(data.token); 
 		} catch (error: any) {
-			console.error("Fehler bei Login:", error);
-			alert(
-				error.message ||
-					"Verbindungsfehler. Bitte versuche es später noch einmal."
-			);
-		} finally {
-			setLoading(false);
-		}
-	}
-
-	async function handleRegister() {
-		setLoading(true);
-		try {
-			const data = await register(username, password);
-			setToken("irgendwas");
-		} catch (error: any) {
-			console.error("Fehler bei Registrierung:", error);
+			console.error("Fehler beim Loginprozess:", error);
 			alert(
 				error.message ||
 					"Verbindungsfehler. Bitte versuche es später noch einmal."
@@ -67,14 +54,14 @@ function Login({ setToken }: LoginProps) {
 					<div className="flex mt-6 w-full justify-between">
 						<button
 							className="btn w-45"
-							onClick={handleLogin}
+							onClick={() => handleAuth(login)}
 							disabled={loading}
 						>
 							Login
 						</button>
 						<button
 							className="btn w-45 bg-blue-500 text-white"
-							onClick={handleRegister}
+							onClick={() => handleAuth(register)}
 							disabled={loading}
 						>
 							Registrieren

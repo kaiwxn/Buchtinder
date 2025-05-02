@@ -1,6 +1,8 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
+import datetime
+
 from database import db
 from models import Users
 from user import userBlueprint
@@ -10,8 +12,8 @@ app = Flask(__name__)
 CORS(app)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///project.db"
-app.config['SECRET_KEY'] = '47WITZ_qmFm38aorw~0wqV3J£RIvPK' 
-app.config["JWT_SECRET_KEY"] = 'your_jwt_secret_key'
+app.config["JWT_SECRET_KEY"] = '47WITZ_qmFm38aorw~0wqV3J£RIvPK'
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = datetime.timedelta(minutes=1)
 app.config['JWT_TOKEN_LOCATION'] = ['headers']
 
 # Initialize Json Token Manager
