@@ -1,14 +1,21 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-
+from flask_jwt_extended import JWTManager
 from database import db
 from models import Users
 from user import userBlueprint
 
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///project.db"
 CORS(app)
+
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///project.db"
+app.config['SECRET_KEY'] = '47WITZ_qmFm38aorw~0wqV3J£RIvPK' 
+app.config["JWT_SECRET_KEY"] = 'your_jwt_secret_key'
+app.config['JWT_TOKEN_LOCATION'] = ['headers']
+
+# Initialize Json Token Manager
+jwt = JWTManager(app)
 
 app.register_blueprint(userBlueprint, url_prefix='/users')
 

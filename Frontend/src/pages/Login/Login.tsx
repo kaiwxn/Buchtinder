@@ -81,7 +81,7 @@ function Login({ setToken }: LoginProps) {
 						</button>
 					</div>
 					<div className="flex mt-6 justify-center text-center mx-20">
-						<a className="text-xs">
+						<p className="text-xs">
 							Indem du fortfährst, erklärst du, dass du{" "}
 							<a
 								className="underline"
@@ -91,7 +91,7 @@ function Login({ setToken }: LoginProps) {
 								diesen Bedingungen
 							</a>{" "}
 							zustimmst.
-						</a>
+						</p>
 					</div>
 				</div>
 			</div>

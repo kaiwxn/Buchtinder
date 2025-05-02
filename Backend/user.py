@@ -2,6 +2,8 @@ from flask import Flask, Blueprint, request
 import hashlib
 import os
 
+from flask_jwt_extended import create_access_token
+
 from models import Users
 from database import db
 
@@ -41,7 +43,8 @@ def registerUser():
     db.session.refresh(newUser)
 
     # Return session token
-    return {"message": "User registered successfully"}, 201
+    sessionToken = create_access_token(identity=newUser.id)
+    return {"message": "User registered successfully", "token": sessionToken}, 201
 
 
 @userBlueprint.post('/login') 
@@ -69,4 +72,6 @@ def loginUser():
     if hashed_password != dbPassword:
         return {"message": "Invalid credentials"}, 401
 
-    return {"message": "Login successful"}, 200
+    
+    sessionToken = create_access_token(identity=dbUser.id)
+    return {"message": "Login successful", "token": sessionToken}, 200
