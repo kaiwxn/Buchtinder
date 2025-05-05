@@ -13,7 +13,7 @@ CORS(app)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///project.db"
 app.config["JWT_SECRET_KEY"] = '47WITZ_qmFm38aorw~0wqV3J£RIvPK'
-app.config["JWT_ACCESS_TOKEN_EXPIRES"] = datetime.timedelta(minutes=1)
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = datetime.timedelta(minutes=15)
 app.config['JWT_TOKEN_LOCATION'] = ['headers']
 
 # Initialize Json Token Manager
@@ -35,7 +35,7 @@ with app.app_context():
 @app.route('/get_users', methods=['GET'])
 def get_users():
     users = list(db.session.query(Users).all())
-    return jsonify([[user.name, user.created_at] for user in users])
+    return jsonify([[user.id, user.name, user.created_at] for user in users])
 
 
 @app.post('/create_user')
