@@ -1,12 +1,10 @@
-import { BookCheck } from "lucide-react";
+import { BookCheck, BookPlus, User } from "lucide-react";
 import { Link } from "react-router";
 
-	
 function Navbar() {
-
 	async function handleLogout() {
 		sessionStorage.removeItem("token");
-		location.reload(); // Reload page 
+		location.reload(); // Reload page
 	}
 
 	const navLinks = [
@@ -23,7 +21,10 @@ function Navbar() {
 
 			{navLinks.map((link) => (
 				<div key={link.to} className="flex-none p-3 text-xl font-medium">
-					<Link className="hover:underline hover:underline-offset-4" to={link.to}>
+					<Link
+						className="hover:underline hover:underline-offset-4"
+						to={link.to}
+					>
 						{link.label}
 					</Link>
 				</div>
@@ -31,9 +32,13 @@ function Navbar() {
 
 			<div className="flex-1"></div>
 
-			<button className="btn btn-outline mr-3" onClick={handleLogout}>
-				<p>Abmelden</p>
+			<button className="btn bg-blue-600 border-blue-600 text-white pl-2 pr-3 mr-3">
+				<BookPlus />
+				<p>Entdecken</p>
 			</button>
+			{/* <button className="btn btn-outline mr-3 " onClick={handleLogout}>
+				<p>Abmelden</p>
+			</button> */}
 
 			<div className="dropdown dropdown-end mr-3">
 				<div
@@ -44,10 +49,24 @@ function Navbar() {
 					<div className="w-10 rounded-full">
 						<img
 							alt="User avatar"
-							src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+							src="https://as1.ftcdn.net/jpg/03/53/11/00/1000_F_353110097_nbpmfn9iHlxef4EDIhXB1tdTD0lcWhG9.jpg"
 						/>
 					</div>
 				</div>
+				<ul
+					tabIndex={0}
+					className="menu dropdown-content rounded-box mt-4 w-52 p-2 shadow-sm"
+				>
+					<li>
+						<a>Profil</a>
+					</li>
+					<li>
+						<a>Einstellungen</a>
+					</li>
+					<li>
+						<a onClick={handleLogout}>Abmelden</a>
+					</li>
+				</ul>
 			</div>
 		</div>
 	);
