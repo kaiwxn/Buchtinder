@@ -38,7 +38,7 @@ cd Backend
 flask --app app run
 ```
 
-Und das Frontend:
+Öffne für das Frontend ein separates Terminal und führe die folgenden Befehle aus:
 
 ```bash
 cd Frontend
