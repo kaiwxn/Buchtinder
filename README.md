@@ -10,6 +10,7 @@ In dieser Markup Datei kann man Texte verfassen.
 Für das Backend müssen die Dependencies durch ein Virtual Environment installiert werden.
 Diese sind in der Datei "requirements.txt" gespeichert.
 
+
 ```bash
 cd Backend
 python -m venv .venv
