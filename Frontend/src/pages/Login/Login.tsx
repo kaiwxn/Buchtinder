@@ -73,7 +73,7 @@ function Login({ setToken }: LoginProps) {
 							Login
 						</button>
 						<button
-							className="btn w-45 bg-blue-500 text-white"
+							className="btn w-45 bg-blue-500 border-0 text-white"
 							onClick={handleRegister}
 							disabled={loading}
 						>
