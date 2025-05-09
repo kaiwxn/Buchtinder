@@ -1,4 +1,4 @@
-import { Search, X } from "lucide-react";
+import { Plus, Search, X } from "lucide-react";
 
 type BookSearchModalProps = {
     onClose: () => void;
@@ -23,16 +23,53 @@ function BookSearchModal({ onClose }: BookSearchModalProps) {
                     </button>
                 </div>
 
-                <label className="input mb-3">
+                <label className="input mb-5">
                     <Search color="#6a7282" size={15} />
                     <input type="search" required placeholder="Suche" />
                 </label>
 
-                <div className="max-h-[60vh] space-y-2 overflow-y-auto">
-                    {Array.from({ length: 30 }).map((_, i) => (
-                        <p key={i} className="rounded bg-gray-400 px-3 py-5">
-                            Inhalt {i + 1}
-                        </p>
+                <div className="max-h-[60vh] space-y-2 overflow-x-clip overflow-y-auto">
+                    {Array.from({ length: 10 }).map((_, index) => (
+                        <div key={index}>
+                            <div className="flex h-30">
+                                <img
+                                    src="https://m.media-amazon.com/images/I/419JCm3Tr+L._SY445_SX342_PQ57_.jpg"
+                                    alt="Cover"
+                                    width={80}
+                                />
+                                <div className="flex p-5 pb-0">
+                                    <div className="">
+                                        <a
+                                            href="https://www.google.de/books/edition/Die_Tribute_von_Panem_X_Das_Lied_von_Vog/u-HkDwAAQBAJ?hl=de&gbpv=0" // Link zu Google Books
+                                            className="mb-1 line-clamp-1 text-xl font-medium overflow-ellipsis hover:underline"
+                                        >
+                                            Tribute von Panem
+                                        </a>
+                                        <p className="mb-2"> Susanne Collins</p>
+
+                                        <div className="justify-between space-x-2">
+                                            <div className="badge badge-soft p-3">
+                                                Fantasy
+                                            </div>
+                                            <div className="badge badge-soft p-3">
+                                                Krimi
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="flex-1"></div>
+                                {/* <button className="btn btn-circle size-30">Füge hinzu!</button> */}
+                                <div className="flex items-center pr-5">
+                                    <button className="btn btn-round items-">
+                                        <Plus />
+                                        <p className="hidden sm:block">
+                                            Hinzufügen
+                                        </p>
+                                    </button>
+                                </div>
+                            </div>
+                            <div className="divider"></div>
+                        </div>
                     ))}
                 </div>
             </div>
