@@ -11,22 +11,39 @@ function BookSearchModal({ onClose }: BookSearchModalProps) {
             onClick={onClose}
         >
             <div
-                className="w-11/12 rounded-xl bg-white p-5 pt-8 shadow-lg sm:w-1/2"
+                className="w-11/12 rounded-xl bg-white p-5 pt-8 shadow-lg lg:w-1/2"
                 onClick={(e) => e.stopPropagation()}
             >
                 <div className="mb-4 flex items-center justify-between">
                     <h2 className="text-2xl font-semibold">
                         Füge neue Bücher hinzu!
                     </h2>
-                    <button onClick={onClose}>
+                    <button
+                        className="btn btn-circle btn-ghost"
+                        onClick={onClose}
+                    >
                         <X />
                     </button>
                 </div>
 
-                <label className="input mb-5">
-                    <Search color="#6a7282" size={15} />
-                    <input type="search" required placeholder="Suche" />
-                </label>
+                <div className="join mb-5 flex">
+                    <label className="input flex items-center">
+                        <Search color="#6a7282" size={15} />
+                        <input
+                            type="search"
+                            required
+                            placeholder="Suche"
+                            className="join-item ml-2"
+                        />
+                    </label>
+                    <select className="select join-item w-1/5">
+                        <option disabled selected>
+                            Filter
+                        </option>
+                        <option>Neuste</option>
+                        <option>Relevanteste</option>
+                    </select>
+                </div>
 
                 <div className="max-h-[60vh] space-y-2 overflow-x-clip overflow-y-auto">
                     {Array.from({ length: 10 }).map((_, index) => (
@@ -58,7 +75,6 @@ function BookSearchModal({ onClose }: BookSearchModalProps) {
                                     </div>
                                 </div>
                                 <div className="flex-1"></div>
-                                {/* <button className="btn btn-circle size-30">Füge hinzu!</button> */}
                                 <div className="flex items-center pr-5">
                                     <button className="btn btn-round items-">
                                         <Plus />
