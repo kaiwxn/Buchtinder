@@ -5,20 +5,25 @@ from models import Books
 from database import db
 
 # Groups these endpoints together
-bookBlueprint = Blueprint('book', __name__)
+bookBlueprint = Blueprint('books', __name__)
 
 GOOGLE_BOOKS_API = 'https://www.googleapis.com/books/v1/volumes'
+MAX_RESULTS_PER_PAGE = 10
 
 # Searches google books for provided query
 @bookBlueprint.get('/search_books')
 def search_books():
-    query = request.args.get("q")
-
-    if not query:
-        return {'message': 'No search query given'}, 400
+    query = str(request.args.get("q")) or ""
+    search_page = int(request.args.get("page"))
     
     # Fetch the books matching the search query 
-    response = requests.get(GOOGLE_BOOKS_API, params={'q':query})
+    # Search page starts from 0
+    params = {
+        'q': query,
+        'startIndex': search_page * MAX_RESULTS_PER_PAGE,
+        'maxResults': MAX_RESULTS_PER_PAGE}
+
+    response = requests.get(GOOGLE_BOOKS_API, params=params)
 
     if response.status_code != 200:
         return {'message': 'Error fetching books from Google'}, 500
@@ -35,14 +40,16 @@ def search_books():
             if identifier.get('type') == 'ISBN_13':
                 isbn_13 = identifier.get('identifier')
                 break
-
+        
         results.append({
             'volume_id': item.get('id'),
             'title': volume_info.get('title'),
             'authors': volume_info.get('authors', []),
             'thumbnail': volume_info.get('imageLinks', {}).get('thumbnail'),
             'isbn': isbn_13,
-            'info_link': 'https://books.google.de/books?id='+item.get('id'),
+            'info_link': 'https://books.google.de/books?id=' + item.get('id'),
+            'categories': volume_info.get('categories', []),
+            'language': volume_info.get('language'),
         })
 
     return jsonify(results)
