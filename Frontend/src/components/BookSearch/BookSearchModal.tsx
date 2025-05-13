@@ -1,4 +1,4 @@
-import { Search, X } from "lucide-react";
+import { X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { BookJsonObject, BookSearchModalProps } from "./types";
 import BookResultItem from "./BookResult";

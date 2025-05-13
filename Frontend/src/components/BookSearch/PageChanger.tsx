@@ -3,7 +3,10 @@ type PageChangerProps = {
     results: any[];
     setPage: (page: number) => void;
 };
-export default function PageChanger({
+
+const RESULTS_PER_PAGE = 10;
+
+function PageChanger({
     page,
     setPage,
     results,
@@ -31,10 +34,12 @@ export default function PageChanger({
             <button
                 className="join-item btn btn-ghost"
                 onClick={handleNextPage}
-                disabled={results.length === 0}
+                disabled={results.length < RESULTS_PER_PAGE}
             >
                 »
             </button>
         </div>
     );
 }
+
+export default PageChanger;

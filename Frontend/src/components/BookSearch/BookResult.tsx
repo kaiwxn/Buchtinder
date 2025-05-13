@@ -5,15 +5,15 @@ type Props = {
     book: BookJsonObject;
 };
 
-export default function BookResultItem({ book }: Props) {
+const BACKUP_IMAGE_SRC =
+    "https://thumbs.dreamstime.com/b/transparent-seamless-pattern-background-checkered-simulation-alpha-channel-png-wallpaper-empty-gird-grid-vector-illustration-308566526.jpg";
+
+function BookResultItem({ book }: Props) {
     return (
         <>
             <div className="flex h-30">
                 <img
-                    src={
-                        book.thumbnail ||
-                        "https://thumbs.dreamstime.com/b/transparent-seamless-pattern-background-checkered-simulation-alpha-channel-png-wallpaper-empty-gird-grid-vector-illustration-308566526.jpg"
-                    }
+                    src={book.thumbnail || BACKUP_IMAGE_SRC}
                     alt="Cover"
                     width={80}
                 />
@@ -53,3 +53,5 @@ export default function BookResultItem({ book }: Props) {
         </>
     );
 }
+
+export default BookResultItem;

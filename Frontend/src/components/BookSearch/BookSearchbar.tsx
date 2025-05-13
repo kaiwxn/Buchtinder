@@ -9,7 +9,7 @@ type BookSearchbarProps = {
     scrollToTop: () => void;
 };
 
-export default function BookSearchbar({
+function BookSearchbar({
     query,
     setLastQuery,
     setQuery,
@@ -17,8 +17,8 @@ export default function BookSearchbar({
     fetchBooks,
 }: BookSearchbarProps) {
     const handleSearch = () => {
-        setLastQuery(query);     // update lastQuery to match input
-        setPage(0);              // reset to page 0
+        setLastQuery(query); // update lastQuery to match input
+        setPage(0); // reset to page 0
         fetchBooks(query, 0);
     };
 
@@ -57,3 +57,5 @@ export default function BookSearchbar({
         </div>
     );
 }
+
+export default BookSearchbar;

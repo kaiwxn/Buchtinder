@@ -1,4 +1,3 @@
-
 export type BookJsonObject = {
     volume_id: string;
     title: string;
