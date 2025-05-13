@@ -2,7 +2,7 @@ import { useState } from "react";
 import { BookCheck, BookPlus } from "lucide-react";
 import { Link } from "react-router";
 import UserDropdown from "./UserDropdown";
-import BookSearchModal from "./BookSearchModal";
+import BookSearchModal from "./BookSearch/BookSearchModal";
 
 function Navbar() {
     const [showBookSearch, setShowBookSearch] = useState(false);
