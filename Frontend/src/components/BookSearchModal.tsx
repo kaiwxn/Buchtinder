@@ -5,6 +5,8 @@ type BookSearchModalProps = {
 };
 
 function BookSearchModal({ onClose }: BookSearchModalProps) {
+
+    
     return (
         <div
             className="fixed inset-0 z-50 flex items-center justify-center"
@@ -87,6 +89,11 @@ function BookSearchModal({ onClose }: BookSearchModalProps) {
                             <div className="divider"></div>
                         </div>
                     ))}
+                    <div className="flex join justify-center">
+                        <button className="join-item btn btn-ghost">«</button>
+                        <button className="join-item btn btn-ghost">1</button>
+                        <button className="join-item btn btn-ghost">»</button>
+                    </div>
                 </div>
             </div>
         </div>
