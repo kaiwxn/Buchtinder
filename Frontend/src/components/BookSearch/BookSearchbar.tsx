@@ -2,23 +2,24 @@ import { Search } from "lucide-react";
 
 type BookSearchbarProps = {
     query: string;
+    setLastQuery: (query: string) => void;
     setQuery: (value: string) => void;
     setPage: (page: number) => void;
-    fetchBooks: () => void;
+    fetchBooks: (q: string, pageNumber: number) => void;
     scrollToTop: () => void;
 };
 
 export default function BookSearchbar({
     query,
+    setLastQuery,
     setQuery,
     setPage,
     fetchBooks,
-    scrollToTop,
 }: BookSearchbarProps) {
     const handleSearch = () => {
-        setPage(0);
-        scrollToTop();
-        fetchBooks();
+        setLastQuery(query);     // update lastQuery to match input
+        setPage(0);              // reset to page 0
+        fetchBooks(query, 0);
     };
 
     return (
@@ -34,7 +35,7 @@ export default function BookSearchbar({
                     onChange={(e) => setQuery(e.target.value)}
                     onKeyDown={(e) => {
                         if (e.key === "Enter") {
-                            fetchBooks();
+                            handleSearch();
                         }
                     }}
                 />

@@ -6,16 +6,17 @@ import BookSearchbar from "./BookSearchbar";
 import PageChanger from "./PageChanger";
 
 function BookSearchModal({ onClose }: BookSearchModalProps) {
-    const [query, setQuery] = useState("");
+    const [query, setQuery] = useState(""); // Input value for the search bar
+    const [lastQuery, setLastQuery] = useState(""); // Last search query
     const [results, setResults] = useState<BookJsonObject[]>([]);
     const [page, setPage] = useState(0);
     const [loading, setLoading] = useState(false);
 
-    const fetchBooks = async () => {
+    const fetchBooks = async (q: string, pageNumber: number) => {
         setLoading(true);
         try {
             const response = await fetch(
-                `http://127.0.0.1:5000/books/search_books?q=${encodeURIComponent(query)}&page=${page}`,
+                `http://127.0.0.1:5000/books/search_books?q=${encodeURIComponent(q)}&page=${pageNumber}`,
             );
             if (!response.ok) {
                 throw new Error("Failed to fetch books");
@@ -29,25 +30,15 @@ function BookSearchModal({ onClose }: BookSearchModalProps) {
         }
     };
 
-    const handleNextPage = () => {
-        setPage(page + 1);
-    };
-
-    const handlePreviousPage = () => {
-        if (page > 0) {
-            setPage(page - 1);
-        }
-    };
-
     const scrollToTop = () => {
         document
             .getElementById("book-results-list")
-            ?.scrollTo({ top: 0, behavior: "smooth" }); // Scroll to top
+            ?.scrollTo({ top: 0, behavior: "smooth" });
     };
 
     useEffect(() => {
-        fetchBooks();
         scrollToTop();
+        fetchBooks(lastQuery, page);
     }, [page]);
 
     return (
@@ -72,6 +63,7 @@ function BookSearchModal({ onClose }: BookSearchModalProps) {
                 </div>
                 <BookSearchbar
                     query={query}
+                    setLastQuery={setLastQuery}
                     setQuery={setQuery}
                     setPage={setPage}
                     fetchBooks={fetchBooks}
