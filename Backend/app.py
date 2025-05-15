@@ -13,6 +13,7 @@ CORS(app)
 
 app.register_blueprint(userBlueprint, url_prefix='/users')
 app.register_blueprint(bookBlueprint, url_prefix='/books')
+app.register_blueprint(bookBlueprint, url_prefix='/weekly_book')
 
 # Database setup
 db.init_app(app)

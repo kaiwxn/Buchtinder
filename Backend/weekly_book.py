@@ -5,7 +5,7 @@ from sqlalchemy import func
 
 
 from models import Books
-from book import map_to_book
+from book import fetch_book_info
 
 bookBlueprint = Blueprint('weekly_book', __name__)
 
@@ -23,7 +23,7 @@ def get_weekly_book():
         return {'Message': 'No books found'}, 404
     
     volume_id = most_liked.volume_id
-    return map_to_book(volume_id)
+    return fetch_book_info(volume_id)
     
 
     
