@@ -11,7 +11,7 @@ function BookSearchModal({ onClose }: BookSearchModalProps) {
     const [results, setResults] = useState<BookJsonObject[]>([]);
     const [page, setPage] = useState(0);
     const [loading, setLoading] = useState(false);
-
+    
     const fetchBooks = async (q: string, pageNumber: number) => {
         setLoading(true);
         try {
@@ -40,6 +40,21 @@ function BookSearchModal({ onClose }: BookSearchModalProps) {
         scrollToTop();
         fetchBooks(lastQuery, page);
     }, [page]);
+
+    // Debounce query input
+    useEffect(() => {
+        if (query.trim() === "") return;
+
+        const handler = setTimeout(() => {
+            if (query !== lastQuery) {
+                setLastQuery(query);
+                setPage(0); 
+                fetchBooks(query, 0);
+            }
+        }, 300);
+
+        return () => clearTimeout(handler);
+    }, [query]);
 
     return (
         <div
