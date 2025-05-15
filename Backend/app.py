@@ -4,6 +4,7 @@ from flask_cors import CORS
 from database import db
 from models import Users
 from user import userBlueprint
+from book import bookBlueprint
 
 
 app = Flask(__name__)
@@ -11,6 +12,7 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///project.db"
 CORS(app)
 
 app.register_blueprint(userBlueprint, url_prefix='/users')
+app.register_blueprint(bookBlueprint, url_prefix='/books')
 
 # Database setup
 db.init_app(app)

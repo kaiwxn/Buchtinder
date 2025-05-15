@@ -14,7 +14,7 @@ function App() {
 	const [token, setToken] = useState(
 		() => sessionStorage.getItem("token") || ""
 	);
-
+	
 	useEffect(() => {
 		token
 			? sessionStorage.setItem("token", token)
