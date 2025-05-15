@@ -41,9 +41,22 @@ function BookSearchModal({ onClose }: BookSearchModalProps) {
         fetchBooks(lastQuery, page);
     }, [page]);
 
+    // Add a delay to the search input to avoid too many requests
+    useEffect(() => {
+        const handler = setTimeout(() => {
+            if (query !== lastQuery) {
+                setLastQuery(query);
+                setPage(0);
+                fetchBooks(query, 0);
+            }
+        }, 300);
+
+        return () => clearTimeout(handler);
+    }, [query]);
+
     return (
         <div
-            className="fixed inset-0 z-50 flex items-center justify-center"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
             onClick={onClose}
         >
             <div
