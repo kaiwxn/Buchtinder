@@ -52,7 +52,6 @@ function BookResultItem({ book }: Props) {
                             onClick={() => setIsAdded(false)}
                         >
                             <Plus />
-                            {/* <p className="hidden sm:block">Hinzugefügt</p> */}
                         </button>
                     </div>
                 ) : (
@@ -62,16 +61,9 @@ function BookResultItem({ book }: Props) {
                             onClick={() => setIsAdded(true)}
                         >
                             <Check color="white" />
-                            {/* <p className="hidden sm:block">Hinzufügen</p> */}
                         </button>
                     </div>
                 )}
-                {/* <div className="flex items-center pr-5">
-                    <button className="btn btn-round">
-                        <Plus />
-                        <p className="hidden sm:block">Hinzufügen</p>
-                    </button>
-                </div> */}
             </div>
             <div className="divider"></div>
         </>
