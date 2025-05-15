@@ -1,6 +1,8 @@
 from flask import Flask, Blueprint, request
 from database import db
 import random
+from sqlalchemy import func
+
 
 from models import Books
 from book import map_to_book
@@ -9,20 +11,19 @@ bookBlueprint = Blueprint('weekly_book', __name__)
 
 @bookBlueprint.get('/weekly_book')
 def get_weekly_book():
-    query = db.session.query(Books)
-    count = query.count()
     
-    if count == 0:
-        return {'Message':'No books found'}, 404
+    most_liked = (
+        db.session.query(Books.volume_id, func.count(Books.volume_id).label('count'))
+        .group_by(Books.volume_id)
+        .order_by(func.count(Books.volume_id).desc())
+        .first()
+        )
 
-    random_id = random.randint(1, count)
-    weekly_book = db.session.query(Books).filter_by(id=random_id).first()
-
-    if not weekly_book:
-        return {'Message':'ID not found'}, 404
+    if not most_liked:
+        return {'Message': 'No books found'}, 404
     
-    return {
-        map_to_book(weekly_book.volume_id)
-    }
+    volume_id = most_liked.volume_id
+    return map_to_book(volume_id)
+    
 
     
