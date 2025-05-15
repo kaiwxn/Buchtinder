@@ -58,7 +58,7 @@ function BookSearchModal({ onClose }: BookSearchModalProps) {
 
     return (
         <div
-            className="fixed inset-0 z-50 flex items-center justify-center"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
             onClick={onClose}
         >
             <div
