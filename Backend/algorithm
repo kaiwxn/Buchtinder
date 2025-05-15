@@ -1,0 +1,14 @@
+from flask import session
+from sqlalchemy import Column, Integer, LargeBinary, String, ForeignKey
+from sqlalchemy import DateTime
+from sqlalchemy.orm import relationship
+from datetime import datetime, timezone
+
+from database import Base
+
+def hinzugefügte_Bücher_ausgeben(user_id):
+    gesuchteDatensätze = session.query(Books).filter(Books.user_id == user_id).all()
+    geleseneBücher = []
+    for datensatz in gesuchteDatensätze:
+        geleseneBücher.append(Books.volume_id)
+    return geleseneBücher
