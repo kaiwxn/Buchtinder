@@ -1,14 +1,17 @@
-import { Plus } from "lucide-react";
+import { Check, Plus } from "lucide-react";
 import { BookJsonObject } from "./types";
+import { useState } from "react";
 
 type Props = {
     book: BookJsonObject;
 };
 
 const BACKUP_IMAGE_SRC =
-    "https://thumbs.dreamstime.com/b/transparent-seamless-pattern-background-checkered-simulation-alpha-channel-png-wallpaper-empty-gird-grid-vector-illustration-308566526.jpg";
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQSiaxXHKRBmNrpzuius2fLvoyrPjPWiu2jDg&s";
 
 function BookResultItem({ book }: Props) {
+    const [isAdded, setIsAdded] = useState(true);
+
     return (
         <>
             <div className="flex h-30">
@@ -42,12 +45,33 @@ function BookResultItem({ book }: Props) {
                     </div>
                 </div>
                 <div className="flex-1"></div>
-                <div className="flex items-center pr-5">
+                {isAdded ? (
+                    <div className="mr-5 flex items-center pr-5">
+                        <button
+                            className="btn btn-round"
+                            onClick={() => setIsAdded(false)}
+                        >
+                            <Plus />
+                            {/* <p className="hidden sm:block">Hinzugefügt</p> */}
+                        </button>
+                    </div>
+                ) : (
+                    <div className="mr-5 flex items-center pr-5">
+                        <button
+                            className="btn btn-round bg-green-500 text-white hover:bg-green-600"
+                            onClick={() => setIsAdded(true)}
+                        >
+                            <Check color="white" />
+                            {/* <p className="hidden sm:block">Hinzufügen</p> */}
+                        </button>
+                    </div>
+                )}
+                {/* <div className="flex items-center pr-5">
                     <button className="btn btn-round">
                         <Plus />
                         <p className="hidden sm:block">Hinzufügen</p>
                     </button>
-                </div>
+                </div> */}
             </div>
             <div className="divider"></div>
         </>
