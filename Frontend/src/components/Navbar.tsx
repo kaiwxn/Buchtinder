@@ -17,7 +17,7 @@ function Navbar() {
 
     return (
         <>
-            <nav className="navbar bg-base-100 drop-shadow w-full">
+            <nav className="navbar bg-base-100 w-full drop-shadow">
                 <div className="mr-4 flex-none">
                     <BookCheck size={36} />
                 </div>
