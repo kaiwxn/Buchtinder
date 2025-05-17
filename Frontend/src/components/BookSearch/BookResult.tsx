@@ -10,7 +10,7 @@ const BACKUP_IMAGE_SRC =
     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQSiaxXHKRBmNrpzuius2fLvoyrPjPWiu2jDg&s";
 
 function BookResultItem({ book }: Props) {
-    const [isAdded, setIsAdded] = useState(true);
+    const [isSelected, setIsSelected] = useState(false);
 
     return (
         <>
@@ -45,22 +45,22 @@ function BookResultItem({ book }: Props) {
                     </div>
                 </div>
                 <div className="flex-1"></div>
-                {isAdded ? (
+                {isSelected ? (
                     <div className="mr-5 flex items-center pr-5">
                         <button
-                            className="btn btn-round"
-                            onClick={() => setIsAdded(false)}
+                            className="btn btn-round bg-green-500 text-white hover:bg-green-600"
+                            onClick={() => setIsSelected(true)}
                         >
-                            <Plus />
+                            <Check color="white" />
                         </button>
                     </div>
                 ) : (
                     <div className="mr-5 flex items-center pr-5">
                         <button
-                            className="btn btn-round bg-green-500 text-white hover:bg-green-600"
-                            onClick={() => setIsAdded(true)}
+                            className="btn btn-round"
+                            onClick={() => setIsSelected(false)}
                         >
-                            <Check color="white" />
+                            <Plus />
                         </button>
                     </div>
                 )}

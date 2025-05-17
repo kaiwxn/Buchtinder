@@ -2,42 +2,35 @@ import { Search } from "lucide-react";
 
 type BookSearchbarProps = {
     query: string;
-    setLastQuery: (query: string) => void;
     setQuery: (value: string) => void;
-    setPage: (page: number) => void;
-    fetchBooks: (q: string, pageNumber: number) => void;
-    scrollToTop: () => void;
+    onManualSearch: () => void;
 };
 
 function BookSearchbar({
     query,
-    setLastQuery,
     setQuery,
-    setPage,
-    fetchBooks,
+    onManualSearch,
 }: BookSearchbarProps) {
     const handleSearch = () => {
-        setLastQuery(query); // update lastQuery to match input
-        setPage(0); // reset to page 0
-        fetchBooks(query, 0);
+        if (query.trim()) {
+            onManualSearch();
+        }
     };
 
     return (
         <div className="join mb-5 flex">
             <label className="input flex items-center">
-                <Search color="#6a7282" size={15} />
+                <Search className="text-gray-500" size={15} />
                 <input
                     type="search"
-                    required
                     placeholder="Suchbegriff eingeben..."
-                    className="join-item ml-2"
+                    className="join-item ml-2 bg-transparent focus:outline-none"
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
                     onKeyDown={(e) => {
-                        if (e.key === "Enter") {
-                            handleSearch();
-                        }
+                        if (e.key === "Enter") handleSearch();
                     }}
+                    aria-label="Bücher suchen"
                 />
             </label>
 
@@ -48,9 +41,11 @@ function BookSearchbar({
                 <option>Neuste</option>
                 <option>Relevanteste</option>
             </select>
+
             <button
                 className="btn btn-neutral join-item shadow-none"
                 onClick={handleSearch}
+                type="button"
             >
                 Suchen
             </button>
