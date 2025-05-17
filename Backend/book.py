@@ -13,7 +13,7 @@ MAX_RESULTS_PER_PAGE = 10
 # Searches google books for provided query
 @bookBlueprint.get('/search_books')
 def search_books():
-    query = str(request.args.get("q")) or ""
+    query = str(request.args.get("q")) or "_"
     search_page = int(request.args.get("page"))
     
     # Fetch the books matching the search query 
