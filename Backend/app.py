@@ -5,6 +5,7 @@ from database import db
 from models import Users
 from user import userBlueprint
 from book import bookBlueprint
+from review import reviewBlueprint
 
 
 app = Flask(__name__)
@@ -13,6 +14,7 @@ CORS(app)
 
 app.register_blueprint(userBlueprint, url_prefix='/users')
 app.register_blueprint(bookBlueprint, url_prefix='/books')
+app.register_blueprint(reviewBlueprint, url_prefix='/reviews')
 
 # Database setup
 db.init_app(app)

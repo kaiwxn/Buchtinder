@@ -48,7 +48,7 @@ MAX_RESULTS_PER_PAGE = 10
 @bookBlueprint.get('/search_books')
 def search_books():
     query = str(request.args.get("q")) or ""
-    search_page = int(request.args.get("page"))
+    search_page = int(request.args.get("page", 0))
     
     # Fetch the books matching the search query 
     # Search page starts from 0
@@ -66,11 +66,13 @@ def search_books():
     volume_ids = []
 
     for item in data.get('items', []):
-        volume_ids.append(item.get(id))  
+        volume_ids.append(item.get('id'))  
 
     results = []
     for volume_id in volume_ids:
         book_info = fetch_book_info(volume_id)
+        if isinstance(book_info, tuple):
+            continue
         if book_info:
             results.append(book_info)
 
@@ -103,7 +105,7 @@ def add_book():
 
 
 
-@bookBlueprint.post('/remove_book')
+@bookBlueprint.delete('/remove_book')
 def remove_book():
     data = request.get_json()
     

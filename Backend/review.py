@@ -3,7 +3,7 @@ from models import Reviews, Books
 from database import db
 
 # Groups these endpoints together
-reviewBlueprint = Blueprint('review', __name__)
+reviewBlueprint = Blueprint('reviews', __name__)
 
 
 @reviewBlueprint.post('/add_review')
@@ -29,6 +29,8 @@ def add_review():
     db.session.add(newReview)
     db.session.commit()
     db.session.refresh(newReview)
+
+    return{'message': 'Successfully added review', 'review_id': newReview.id}, 201
 
 
 @reviewBlueprint.get('/get_reviews_by_user')
@@ -70,7 +72,7 @@ def get_reviews_by_book():
     return jsonify(results)
 
 
-@reviewBlueprint.post('/remove_review')
+@reviewBlueprint.delete('/remove_review')
 def remove_review():
     data = request.get_json()
     
@@ -83,9 +85,31 @@ def remove_review():
     review = db.session.query(Reviews).filter_by(user_id=user_id, book_id=book_id).first()
 
     if not review:
-        return {'message': 'Missing book entry'}, 404
+        return {'message': 'Missing review entry'}, 404
     
     db.session.delete(review)
     db.session.commit()
 
     return{'message': 'Successfully removed review'}, 200
+
+
+@reviewBlueprint.put('/edit_review')
+def edit_review():
+    data = request.get_json()
+
+    user_id = data.get('user_id')
+    book_id = data.get('book_id')
+    new_text = data.get('review_text')
+
+    if not user_id or not book_id:
+        return {'message': 'Missing user_id or book_id'}, 400
+    
+    review = db.session.query(Reviews).filter_by(user_id=user_id, book_id=book_id).first()
+
+    if not review:
+        return {'message': 'Missing review entry'}, 404
+    
+    review.review_text = new_text
+    db.session.commit()
+
+    return{'message': 'Successfully edited review'}, 200

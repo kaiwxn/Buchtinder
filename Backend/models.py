@@ -51,7 +51,7 @@ class Reviews(Base):
     user = relationship('Users', backref='Reviews')
     book = relationship('Books', backref='Reviews')
 
-    __table_args__ = (db.UniqueConstraint('user_id', 'book_id', name='user_book_review_Constraint'))
+    __table_args__ = (db.UniqueConstraint('user_id', 'book_id', name='user_book_review_Constraint'),)
 
     def __repr__(self):
         return f'<Review user_id={self.user_id!r}, book_id={self.book_id}>'
