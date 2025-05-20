@@ -21,8 +21,8 @@ def add_review():
     if not check_book_entry:
         return {'message': 'Book by this user not found'}, 403
     
-    check_existence = db.session.query(Reviews).filter_by(user_id=user_id, book_id=book_id).first()
-    if check_existence:
+    check_review_existence = db.session.query(Reviews).filter_by(user_id=user_id, book_id=book_id).first()
+    if check_review_existence:
         return {'message': 'Book is already reviewed by this user'}, 400 
     
     newReview = Reviews(user_id=user_id, book_id=book_id, review_text=review_text)
@@ -67,7 +67,12 @@ def get_reviews_by_book():
 
     results = []
     for review in reviews:
-        results.append({'review_id': review.id})
+        results.append({
+            'review_id': review.id,
+            'user_id': review.user_id,
+            'book_id': review.book_id,
+            'review_text': review.review_text,
+        })
 
     return jsonify(results)
 
@@ -77,11 +82,17 @@ def remove_review():
     data = request.get_json()
     
     user_id = data.get('user_id')
-    book_id = data.get('book_id')
+    volume_id = data.get('volume_id')
 
-    if not user_id or not book_id:
-        return {'message': 'Missing user_id or book_id'}, 400
+    if not user_id or not volume_id:
+        return {'message': 'Missing user_id or volume_id'}, 400
     
+    book = db.session.query(Books).filter_by(user_id=user_id, volume_id=volume_id).first()
+    book_id = book.id
+
+    if not book_id:
+        return {'message': 'Missing book entry'}, 404
+
     review = db.session.query(Reviews).filter_by(user_id=user_id, book_id=book_id).first()
 
     if not review:
@@ -98,12 +109,18 @@ def edit_review():
     data = request.get_json()
 
     user_id = data.get('user_id')
-    book_id = data.get('book_id')
+    volume_id = data.get('volume_id')
     new_text = data.get('review_text')
 
-    if not user_id or not book_id:
-        return {'message': 'Missing user_id or book_id'}, 400
+    if not user_id or not volume_id:
+        return {'message': 'Missing user_id or volume_id'}, 400
     
+    book = db.session.query(Books).filter_by(user_id=user_id, volume_id=volume_id).first()
+    book_id = book.id
+
+    if not book_id:
+        return {'message': 'Missing book entry'}, 404
+
     review = db.session.query(Reviews).filter_by(user_id=user_id, book_id=book_id).first()
 
     if not review:
