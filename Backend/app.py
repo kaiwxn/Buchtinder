@@ -26,31 +26,6 @@ with app.app_context():
     # db.drop_all() 
     db.create_all()  
 
-# Admin endpoints
-@app.route('/get_users', methods=['GET'])
-def get_users():
-    users = list(db.session.query(Users).all())
-    return jsonify([[user.name, user.created_at] for user in users])
-
-
-@app.post('/create_user')
-def create_user():
-    data = request.get_json()
-
-    name = data.get("name")
-    password = data.get("password")
-    salt = data.get("salt")
-
-    if not name or not password or not salt:
-        return {"message": "Wrong data format!"}, 400
-
-    newUser = Users(name=name, password=password, salt=salt)
-    db.session.add(newUser)
-    db.session.commit()
-    db.session.refresh(newUser)
-
-    return jsonify({"message": "User created successfully", "user_id": newUser.id}), 201
-
 
 if __name__ == "__main__":
     app.run(debug=True)

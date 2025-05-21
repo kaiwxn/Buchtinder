@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 import requests
 
-from models import Books
+from models import UserToBooks
 from database import db
 
 def fetch_book_info(volume_id: str):
@@ -91,12 +91,12 @@ def add_book():
     if not user_id or not volume_id:
         return {'message': 'Missing user_id or volume_id'}, 400
     
-    check_existence = db.session.query(Books).filter_by(user_id=user_id, volume_id=volume_id).first()
+    check_existence = db.session.query(UserToBooks).filter_by(user_id=user_id, volume_id=volume_id).first()
     if check_existence:
         return {'message': 'Book already added by user'}, 409
 
 
-    newBook = Books(user_id=user_id, volume_id=volume_id)
+    newBook = UserToBooks(user_id=user_id, volume_id=volume_id)
     db.session.add(newBook)
     db.session.commit()
     db.session.refresh(newBook)
@@ -115,7 +115,7 @@ def remove_book():
     if not user_id or not volume_id:
         return {'message': 'Missing user_id or volume_id'}, 400
     
-    book = db.session.query(Books).filter_by(user_id=user_id, volume_id=volume_id).first()
+    book = db.session.query(UserToBooks).filter_by(user_id=user_id, volume_id=volume_id).first()
 
     if not book:
         return {'message': 'Missing book entry'}, 404
@@ -134,7 +134,7 @@ def get_books_from_user():
     if not user_id:
         return {'message': 'Missing user_id'}, 400
     
-    books = db.session.query(Books).filter_by(user_id=user_id).all()
+    books = db.session.query(UserToBooks).filter_by(user_id=user_id).all()
 
     results = []
     for book in books:

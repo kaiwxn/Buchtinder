@@ -24,14 +24,14 @@ class Users(Base):
     def __repr__(self):
         return f'<User {self.name!r}>'
     
-class Books(Base):
-    __tablename__ = 'Books'
+class UserToBooks(Base):
+    __tablename__ = 'UserToBooks'
     id = Column(Integer, primary_key = True)
     user_id = Column(Integer, ForeignKey('Users.id'), nullable=False)
     volume_id = Column(String(255), nullable = False)
     created_at = Column(DateTime, default=datetime.now(timezone.utc), nullable=False)
 
-    user = relationship('Users', backref='Books')
+    user = relationship('Users', backref='UserToBooks')
 
     def __init__(self, user_id=None, volume_id=None):
         self.user_id = user_id
@@ -45,12 +45,12 @@ class Reviews(Base):
     __tablename__ = 'Reviews'
     id = Column(Integer, primary_key = True)
     user_id = Column(Integer, ForeignKey('Users.id'), nullable=False)
-    book_id = Column(Integer, ForeignKey('Books.id'), nullable=False)
+    book_id = Column(Integer, ForeignKey('UserToBooks.id'), nullable=False)
     review_text = Column(Text, nullable=False)
     created_at = Column(DateTime, default=datetime.now(timezone.utc), nullable=False)
 
     user = relationship('Users', backref='Reviews')
-    book = relationship('Books', backref='Reviews')
+    book = relationship('UserToBooks', backref='Reviews')
 
     __table_args__ = (db.UniqueConstraint('user_id', 'book_id', name='user_book_review_Constraint'),)
 
