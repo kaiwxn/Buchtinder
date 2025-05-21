@@ -7,9 +7,9 @@ from sqlalchemy import func
 from models import Books
 from book import fetch_book_info
 
-bookBlueprint = Blueprint('weekly_book', __name__)
+weekly_book_Blueprint = Blueprint('weekly_book_Blueprint', __name__)
 
-@bookBlueprint.get('/weekly_book')
+@weekly_book_Blueprint.get('/weekly_book')
 def get_weekly_book():
     
     most_liked = (
