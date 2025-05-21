@@ -1,8 +1,7 @@
-from flask import Flask, request, jsonify
+from flask import Flask
 from flask_cors import CORS
 
 from database import db
-from models import Users
 from user import userBlueprint
 from book import bookBlueprint
 from review import reviewBlueprint

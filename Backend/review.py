@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from models import Reviews, Books
+from models import Reviews, UserToBooks
 from database import db
 
 # Groups these endpoints together
@@ -17,7 +17,7 @@ def add_review():
     if not user_id or not book_id or not review_text:
         return {'message': 'Missing required data fields'}, 400
     
-    check_book_entry = db.session.query(Books).filter_by(id=book_id, user_id=user_id).first()
+    check_book_entry = db.session.query(UserToBooks).filter_by(id=book_id, user_id=user_id).first()
     if not check_book_entry:
         return {'message': 'Book by this user not found'}, 403
     
@@ -57,7 +57,7 @@ def get_reviews_by_book():
         return {'message': 'Missing volume_id'}, 400
     
     book_ids = []
-    books = db.session.query(Books).filter_by(volume_id=volume_id).all()
+    books = db.session.query(UserToBooks).filter_by(volume_id=volume_id).all()
     for book in books:
         book_ids.append(book.id)
 
@@ -87,7 +87,7 @@ def remove_review():
     if not user_id or not volume_id:
         return {'message': 'Missing user_id or volume_id'}, 400
     
-    book = db.session.query(Books).filter_by(user_id=user_id, volume_id=volume_id).first()
+    book = db.session.query(UserToBooks).filter_by(user_id=user_id, volume_id=volume_id).first()
     book_id = book.id
 
     if not book_id:
@@ -115,7 +115,7 @@ def edit_review():
     if not user_id or not volume_id:
         return {'message': 'Missing user_id or volume_id'}, 400
     
-    book = db.session.query(Books).filter_by(user_id=user_id, volume_id=volume_id).first()
+    book = db.session.query(UserToBooks).filter_by(user_id=user_id, volume_id=volume_id).first()
     book_id = book.id
 
     if not book_id:
