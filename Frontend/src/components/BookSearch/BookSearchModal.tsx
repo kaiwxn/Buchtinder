@@ -37,13 +37,30 @@ function BookSearchModal({ onClose }: BookSearchModalProps) {
     };
 
     useEffect(() => {
+        if (!lastQuery.trim()) return;
         scrollToTop();
         fetchBooks(lastQuery, page);
-    }, [page]);
+    }, [page, lastQuery]);
+
+    useEffect(() => {
+        if (!query.trim()) {
+            setResults([]);
+            return;
+        }
+
+        const timeout = setTimeout(() => {
+            if (query !== lastQuery) {
+                setLastQuery(query);
+                setPage(0);
+            }
+        }, 300);
+
+        return () => clearTimeout(timeout);
+    }, [query, lastQuery]);
 
     return (
         <div
-            className="fixed inset-0 z-50 flex items-center justify-center"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
             onClick={onClose}
         >
             <div
@@ -63,15 +80,20 @@ function BookSearchModal({ onClose }: BookSearchModalProps) {
                 </div>
                 <BookSearchbar
                     query={query}
-                    setLastQuery={setLastQuery}
                     setQuery={setQuery}
-                    setPage={setPage}
-                    fetchBooks={fetchBooks}
-                    scrollToTop={scrollToTop}
+                    onManualSearch={() => {
+                        setPage(0);
+                        setLastQuery(query);
+                    }}
                 />
                 {loading && (
                     <div className="flex items-center justify-center">
                         <span className="loading loading-spinner loading-xl"></span>
+                    </div>
+                )}
+                {query.length === 0 && (
+                    <div className="flex items-center justify-center">
+                        {/* Hier könnte ein Platzhalter für leere Suchergebnisse sein */}
                     </div>
                 )}
                 <div
