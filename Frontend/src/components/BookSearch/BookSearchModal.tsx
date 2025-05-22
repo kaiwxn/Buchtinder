@@ -101,7 +101,7 @@ function BookSearchModal({ onClose }: BookSearchModalProps) {
                     className="max-h-[60vh] space-y-2 overflow-x-clip overflow-y-auto"
                 >
                     {results.map((book, index) => (
-                        <BookResultItem key={index} book={book} />
+                        <BookResultItem key={index} book={book}/>
                     ))}
                     <PageChanger
                         page={page}

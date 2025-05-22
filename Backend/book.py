@@ -49,6 +49,7 @@ MAX_RESULTS_PER_PAGE = 10
 def search_books():
     query = str(request.args.get("q")) or "_"
     search_page = int(request.args.get("page", 0))
+    userId = str(request.args.get("user_id"))
     
     # Fetch the books matching the search query 
     # Search page starts from 0
@@ -71,6 +72,12 @@ def search_books():
     results = []
     for volume_id in volume_ids:
         book_info = fetch_book_info(volume_id)
+        selected = False
+        if db.session.query(UserToBooks).filter_by(user_id=1, volume_id=volume_id).first():
+            selected = True
+
+        book_info["selected"] = selected
+
         if isinstance(book_info, tuple):
             continue
         if book_info:

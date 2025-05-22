@@ -76,7 +76,7 @@ def loginUser():
 @userBlueprint.route('/get_users', methods=['GET'])
 def get_users():
     users = list(db.session.query(Users).all())
-    return jsonify([[user.name, user.created_at] for user in users])
+    return jsonify([[user.id, user.name, user.created_at] for user in users])
 
 
 @userBlueprint.post('/create_user')
