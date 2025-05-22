@@ -1,35 +1,78 @@
-import { useState } from "react";
+import { motion, useMotionValue, useTransform } from "motion/react";
+import { useEffect, useState } from "react";
+import { JSX } from "react/jsx-runtime";
 
-function CardStack() {
-    const cardsData = Array.from({ length: 10 }, (_, i) => ({
-        id: i,
-        text: `Card ${i}`,
-    }));
-    const [cards, setCards] = useState(cardsData);
+const cardsData = Array.from({ length: 10 }, (_, i) => ({
+    id: i,
+    text: `Card ${i}`,
+}));
+type CardProps = {
+    id: number;
+    setCards: (cards: any) => void;
+    cards: { id: number; text: string }[];
+};
 
-    const handleSwipe = (direction: "left" | "right") => {
-        setCards((prev) => prev.slice(1));
+const Card = ({ id, setCards, cards }: CardProps) => {
+    const x = useMotionValue(0);
+    const rotateRaw = useTransform(x, [-150, 150], [-18, 18]);
+    const opacity = useTransform(x, [-150, 0, 150], [0, 1, 0]);
+
+    const isFront = id === cards[cards.length - 1]?.id;
+
+    const rotate = useTransform(() => {
+        return `${rotateRaw.get()}deg`;
+    });
+
+    const handleDragEnd = () => {
+        if (Math.abs(x.get()) > 100) {
+            setCards((prev: any) => prev.filter((v: any) => v.id !== id));
+        }
     };
 
     return (
-        <div className="stack stack-top bg-black-500 mt-5 h-110 w-full justify-center">
-            {cards.map((card) => {
-                return (
-                    <div
-                        className="border-base-content card bg-base-100 flex border"
-                        key={card.id}
-                    >
-                        {card.text}
-                    </div>
-                );
-            })}
+        <motion.img
+            src="https://images.unsplash.com/photo-1570464197285-9949814674a7?q=80&w=2273&auto=format&fit=crop&ixlib=rb-4.0.3"
+            alt="Freundeskarte"
+            className="absolute h-120 w-8/9 origin-bottom rounded-lg object-cover hover:cursor-grab active:cursor-grabbing"
+            style={{
+                x,
+                rotate,
+                opacity,
+                boxShadow: isFront
+                    ? "0 20px 25px -5px rgb(0 0 0 / 0.5), 0 8px 10px -6px rgb(0 0 0 / 0.5)"
+                    : undefined,
+                transition: "0.125s transform",
+            }}
+            animate={{
+                scale: isFront ? 1 : 0.99,
+            }}
+            drag={isFront ? "x" : false}
+            dragConstraints={{ left: 0, right: 0 }}
+            onDragEnd={handleDragEnd}
+        />
+    );
+};
+
+function CardStack() {
+    const [cards, setCards] = useState(cardsData);
+
+    return (
+        <div className="relative mb-5 flex h-[80vh] w-full items-center justify-center">
+            {cards.map((card: any) => (
+                <Card
+                    key={card.id}
+                    {...card}
+                    setCards={setCards}
+                    cards={cards}
+                />
+            ))}
         </div>
     );
 }
 
 function Home() {
     return (
-        <div className="mx-60 mt-10 min-h-screen justify-center px-4 sm:px-10 lg:px-60">
+        <div className="mx-0.5 mt-10 min-h-screen justify-center px-4 sm:mx-60 sm:px-10 lg:px-60">
             <h1 className="text-4xl">Finde neue Freunde!</h1>
             <CardStack />
         </div>
