@@ -40,3 +40,16 @@ class Books(Base):
 
     def __repr__(self):
         return f'<Book {self.volume_id!r} added by User {self.user_id!r}>'
+    
+class Weekly_Books(Base):
+    __tablename__ = 'Weekly_Books'
+    id = Column(Integer, primary_key = True)
+    volume_id = Column(String(255), nullable = False)
+    created_at = Column(DateTime, default=datetime.now(timezone.utc), nullable=False)
+
+    def __init__(self, volume_id=None):
+        self.volume_id = volume_id
+        self.created_at = datetime.now(timezone.utc)
+
+    def __repr__(self):
+        return f'<Weekly_Book {self.volume_id!r}>'
