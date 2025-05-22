@@ -1,4 +1,4 @@
-from flask import Flask, Blueprint, request
+from flask import Flask, Blueprint, jsonify, request
 from database import db
 from sqlalchemy import func
 from datetime import datetime
@@ -8,13 +8,13 @@ from book import fetch_book_info
 
 weekly_book_Blueprint = Blueprint('weekly_book_Blueprint', __name__)
 
-@weekly_book_Blueprint.get('/weekly_book')
+@weekly_book_Blueprint.get('/get')
 def new_weekly_book():
     current_day = datetime.today().weekday()
     if current_day == 0:
         return get_weekly_book()
     else:
-        return db.session.query(Weekly_Books).order_by(Weekly_Books.id.desc()).first()
+        return jsonify(db.session.query(Weekly_Books).order_by(Weekly_Books.id.desc()).first())
 
 def get_weekly_book():
         
