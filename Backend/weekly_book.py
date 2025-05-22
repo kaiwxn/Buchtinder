@@ -6,11 +6,10 @@ from datetime import datetime
 from models import Books, Weekly_Books
 from book import fetch_book_info
 
-bookBlueprint = Blueprint('weekly_book', __name__)
+weekly_book_Blueprint = Blueprint('weekly_book_Blueprint', __name__)
 
-@bookBlueprint.get('/weekly_book')
+@weekly_book_Blueprint.get('/weekly_book')
 def new_weekly_book():
-
     current_day = datetime.today().weekday()
     if current_day == 0:
         return get_weekly_book()
