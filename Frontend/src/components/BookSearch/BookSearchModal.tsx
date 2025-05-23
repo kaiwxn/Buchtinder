@@ -37,26 +37,18 @@ function BookSearchModal({ onClose }: BookSearchModalProps) {
     };
 
     useEffect(() => {
-        if (!lastQuery.trim()) return;
         scrollToTop();
         fetchBooks(lastQuery, page);
-    }, [page, lastQuery]);
+    }, [lastQuery]);
 
     useEffect(() => {
-        if (!query.trim()) {
-            setResults([]);
-            return;
-        }
-
         const timeout = setTimeout(() => {
-            if (query !== lastQuery) {
-                setLastQuery(query);
-                setPage(0);
-            }
+            setLastQuery(query);
+            setPage(0);
         }, 300);
 
         return () => clearTimeout(timeout);
-    }, [query, lastQuery]);
+    }, [query]);
 
     return (
         <div
