@@ -4,39 +4,6 @@ import requests
 from models import UserToBooks
 from database import db
 
-def fetch_book_info(volume_id: str):
-    GOOGLE_BOOKS_API = f'https://www.googleapis.com/books/v1/volumes/{volume_id}'
-
-    response = requests.get(GOOGLE_BOOKS_API)
-    
-    if response.status_code != 200:
-        return {'message': 'Error fetching info from Google'}, 500
-
-
-    data = response.json()
-
-
-    volume_info = data.get('volumeInfo', {})
-    identifiers = volume_info.get('industryIdentifiers', []) 
-
-    isbn_13 = None
-    for identifier in identifiers:
-        if identifier.get('type') == 'ISBN_13':
-            isbn_13 = identifier.get('identifier')
-            break
-        
-    return{
-        'volume_id': volume_id,
-        'title': volume_info.get('title'),
-        'authors': volume_info.get('authors', []),
-        'thumbnail': volume_info.get('imageLinks', {}).get('thumbnail'),
-        'isbn': isbn_13,
-        'info_link': f'https://books.google.de/books?id={volume_id}',
-        'categories': volume_info.get('categories', []),
-        'language': volume_info.get('language'),
-    }
-
-
 
 # Groups these endpoints together
 bookBlueprint = Blueprint('books', __name__)
@@ -44,16 +11,37 @@ bookBlueprint = Blueprint('books', __name__)
 GOOGLE_BOOKS_API = 'https://www.googleapis.com/books/v1/volumes'
 MAX_RESULTS_PER_PAGE = 10
 
+def parse_book_item(item):
+    volume_info = item.get('volumeInfo', {})
+    identifiers = volume_info.get('industryIdentifiers', []) 
+
+    isbn_13 = None
+    for identifier in identifiers:
+        if identifier.get('type') == 'ISBN_13':
+            isbn_13 = identifier.get('identifier')
+            break
+    
+    return {
+        'volume_id': item.get('id'),
+        'title': volume_info.get('title'),
+        'authors': volume_info.get('authors', []),
+        'thumbnail': volume_info.get('imageLinks', {}).get('thumbnail'),
+        'isbn': isbn_13,
+        'info_link': 'https://books.google.de/books?id=' + item.get('id'),
+        'categories': volume_info.get('categories', []),
+        'language': volume_info.get('language'),
+    }
+
 # Searches google books for provided query
 @bookBlueprint.get('/search_books')
 def search_books():
-    query = str(request.args.get("q")) or "_"
-    search_page = int(request.args.get("page", 0))
+    query = str(request.args.get("q"))
+    search_page = int(request.args.get("page"))
     
     # Fetch the books matching the search query 
     # Search page starts from 0
     params = {
-        'q': query,
+        'q': query or "_",
         'startIndex': search_page * MAX_RESULTS_PER_PAGE,
         'maxResults': MAX_RESULTS_PER_PAGE}
 
@@ -63,19 +51,10 @@ def search_books():
         return {'message': 'Error fetching books from Google'}, 500
     
     data = response.json()
-    volume_ids = []
-
-    for item in data.get('items', []):
-        volume_ids.append(item.get('id'))  
-
     results = []
-    for volume_id in volume_ids:
-        book_info = fetch_book_info(volume_id)
-        if isinstance(book_info, tuple):
-            continue
-        if book_info:
-            results.append(book_info)
 
+    for book in data.get('items', []):
+        results.append(parse_book_item(book))
 
     return jsonify(results)
 
