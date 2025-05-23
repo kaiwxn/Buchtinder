@@ -1,6 +1,7 @@
+import { Heart, X } from "lucide-react";
 import { motion, useMotionValue, useTransform } from "motion/react";
+import { div } from "motion/react-client";
 import { useEffect, useState } from "react";
-import { JSX } from "react/jsx-runtime";
 
 const cardsData = Array.from({ length: 10 }, (_, i) => ({
     id: i,
@@ -12,7 +13,7 @@ type CardProps = {
     cards: { id: number; text: string }[];
 };
 
-const Card = ({ id, setCards, cards }: CardProps) => {
+function Card({ id, setCards, cards }: CardProps) {
     const x = useMotionValue(0);
     const rotateRaw = useTransform(x, [-150, 150], [-18, 18]);
     const opacity = useTransform(x, [-150, 0, 150], [0, 1, 0]);
@@ -30,12 +31,13 @@ const Card = ({ id, setCards, cards }: CardProps) => {
     };
 
     return (
-        <motion.img
-            src="https://images.unsplash.com/photo-1570464197285-9949814674a7?q=80&w=2273&auto=format&fit=crop&ixlib=rb-4.0.3"
-            alt="Freundeskarte"
-            className="absolute h-120 w-8/9 origin-bottom rounded-lg object-cover hover:cursor-grab active:cursor-grabbing"
+        <motion.div
+            className="absolute flex h-130 w-110 origin-bottom rounded-lg object-cover hover:cursor-grab active:cursor-grabbing"
             style={{
                 x,
+                backgroundColor: "lightblue",
+                backgroundSize: "cover",
+                backgroundPosition: "center",
                 rotate,
                 opacity,
                 boxShadow: isFront
@@ -49,15 +51,37 @@ const Card = ({ id, setCards, cards }: CardProps) => {
             drag={isFront ? "x" : false}
             dragConstraints={{ left: 0, right: 0 }}
             onDragEnd={handleDragEnd}
-        />
+        >
+            <div className="absolute bottom-0 h-4/9 w-full rounded-b-lg bg-gray-500 p-4 text-white">
+                <div className="mx-5 mb-10 flex h-15 w-full space-x-5">
+                    <img
+                        alt="User avatar"
+                        src="https://as1.ftcdn.net/jpg/03/53/11/00/1000_F_353110097_nbpmfn9iHlxef4EDIhXB1tdTD0lcWhG9.jpg"
+                        className="rounded-full"
+                    />
+                    <p className="align-middle text-3xl font-semibold">Name</p>
+                </div>
+
+                <div className="flex w-full justify-evenly">
+                    <button className="btn btn-ghost">
+                        <X />
+                        Next
+                    </button>
+                    <button className="btn btn-ghost">
+                        <Heart />
+                        Like
+                    </button>
+                </div>
+            </div>
+        </motion.div>
     );
-};
+}
 
 function CardStack() {
     const [cards, setCards] = useState(cardsData);
 
     return (
-        <div className="relative mb-5 flex h-[80vh] w-full items-center justify-center">
+        <div className="mt-5 flex justify-center">
             {cards.map((card: any) => (
                 <Card
                     key={card.id}
@@ -73,7 +97,6 @@ function CardStack() {
 function Home() {
     return (
         <div className="mx-0.5 mt-10 min-h-screen justify-center px-4 sm:mx-60 sm:px-10 lg:px-60">
-            <h1 className="text-4xl">Finde neue Freunde!</h1>
             <CardStack />
         </div>
     );

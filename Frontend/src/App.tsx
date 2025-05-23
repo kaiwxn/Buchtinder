@@ -2,7 +2,7 @@ import { Routes, Route } from "react-router";
 import { useEffect, useState } from "react";
 
 import Navbar from "./components/Navbar";
-import Home from "./pages/Home";
+import Home from "./pages/Home/Home";
 import Friends from "./pages/Friends";
 import Books from "./pages/Books";
 import Footer from "./components/Footer";
