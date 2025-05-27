@@ -63,19 +63,28 @@ def search_books():
         return {'message': 'Error fetching books from Google'}, 500
     
     data = response.json()
-    volume_ids = []
+    results = []
 
     for item in data.get('items', []):
-        volume_ids.append(item.get('id'))  
+        volume_info = item.get('volumeInfo', {})
+        identifiers = volume_info.get('industryIdentifiers', []) 
 
-    results = []
-    for volume_id in volume_ids:
-        book_info = fetch_book_info(volume_id)
-        if isinstance(book_info, tuple):
-            continue
-        if book_info:
-            results.append(book_info)
-
+        isbn_13 = None
+        for identifier in identifiers:
+            if identifier.get('type') == 'ISBN_13':
+                isbn_13 = identifier.get('identifier')
+                break
+        
+        results.append({
+            'volume_id': item.get('id'),
+            'title': volume_info.get('title'),
+            'authors': volume_info.get('authors', []),
+            'thumbnail': volume_info.get('imageLinks', {}).get('thumbnail'),
+            'isbn': isbn_13,
+            'info_link': f'https://books.google.de/books?id={item.get('id')}',
+            'categories': volume_info.get('categories', []),
+            'language': volume_info.get('language'),
+        })
 
     return jsonify(results)
 
