@@ -63,11 +63,11 @@ function Card({ id, setCards, cards }: CardProps) {
                 </div>
 
                 <div className="flex w-full justify-evenly">
-                    <button className="btn btn-ghost">
+                    <button className="btn btn-ghost px-10 py-5">
                         <X />
                         Next
                     </button>
-                    <button className="btn btn-ghost">
+                    <button className="btn btn-ghost px-10 py-5">
                         <Heart />
                         Like
                     </button>

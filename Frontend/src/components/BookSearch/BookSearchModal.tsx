@@ -39,7 +39,7 @@ function BookSearchModal({ onClose }: BookSearchModalProps) {
     useEffect(() => {
         scrollToTop();
         fetchBooks(lastQuery, page);
-    }, [lastQuery]);
+    }, [lastQuery, page]);
 
     useEffect(() => {
         const timeout = setTimeout(() => {
