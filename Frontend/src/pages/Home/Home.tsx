@@ -1,5 +1,5 @@
 import { Heart, X } from "lucide-react";
-import { motion, useMotionValue, useTransform } from "motion/react";
+import { animate, motion, useMotionValue, useTransform } from "motion/react";
 import { div } from "motion/react-client";
 import { useEffect, useState } from "react";
 
@@ -29,6 +29,11 @@ function Card({ id, setCards, cards }: CardProps) {
             setCards((prev: any) => prev.filter((v: any) => v.id !== id));
         }
     };
+    const swipeAndRemove = async (direction: "left" | "right") => {
+        const to = direction === "left" ? -200 : 200; // Swipe simulieren
+        await animate(x, to, { duration: 0.3 });
+        setCards((prev: any) => prev.filter((v: any) => v.id !== id));
+    };
 
     return (
         <motion.div
@@ -52,24 +57,30 @@ function Card({ id, setCards, cards }: CardProps) {
             dragConstraints={{ left: 0, right: 0 }}
             onDragEnd={handleDragEnd}
         >
-            <div className="absolute bottom-0 h-4/9 w-full rounded-b-lg bg-gray-500 p-4 text-white">
-                <div className="mx-5 mb-10 flex h-15 w-full space-x-5">
+            <div className="absolute bottom-0 h-1/3 w-full rounded-b-lg bg-gray-500 p-4 text-white">
+                <div className="mx-5 mb-10 flex h-15 w-full items-center space-x-5">
                     <img
                         alt="User avatar"
                         src="https://as1.ftcdn.net/jpg/03/53/11/00/1000_F_353110097_nbpmfn9iHlxef4EDIhXB1tdTD0lcWhG9.jpg"
-                        className="rounded-full"
+                        className="max-h-15 rounded-full"
                     />
-                    <p className="align-middle text-3xl font-semibold">Name</p>
+                    <p className="text-3xl font-semibold">Name</p>
                 </div>
-
                 <div className="flex w-full justify-evenly">
-                    <button className="btn btn-ghost px-10 py-5">
+                    <button
+                        className="btn btn-ghost space-x-1 px-10 py-5"
+                        onClick={() => swipeAndRemove("left")}
+                    >
                         <X />
-                        Next
+                        <p className="text-xl font-semibold">Next</p>
                     </button>
-                    <button className="btn btn-ghost px-10 py-5">
+
+                    <button
+                        className="btn btn-ghost space-x-1 px-10 py-5"
+                        onClick={() => swipeAndRemove("right")}
+                    >
                         <Heart />
-                        Like
+                        <p className="text-xl font-semibold">Like</p>
                     </button>
                 </div>
             </div>
