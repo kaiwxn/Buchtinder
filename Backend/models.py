@@ -64,8 +64,8 @@ class Reviews(Base):
         return f'<Review user_id={self.user_id!r}, book_id={self.book_id}>'
 
     
-class Weekly_Books(Base):
-    __tablename__ = 'Weekly_Books'
+class WeeklyBooks(Base):
+    __tablename__ = 'WeeklyBooks'
     id = Column(Integer, primary_key = True)
     volume_id = Column(String(255), nullable = False)
     created_at = Column(DateTime, default=datetime.now(timezone.utc), nullable=False)
@@ -75,4 +75,4 @@ class Weekly_Books(Base):
         self.created_at = datetime.now(timezone.utc)
 
     def __repr__(self):
-        return f'<Weekly_Book {self.volume_id!r}>'
+        return f'<WeeklyBook {self.volume_id!r}>'

@@ -63,7 +63,7 @@ def get_reviews_by_book():
 
     reviews = []
     for book_id in book_ids:
-        reviews.append(db.session.query(Reviews).filter_by(book_id=book_id).first())
+        reviews.append(db.session.query(Reviews).filter_by(book_id=book_id).all())
 
     results = []
     for review in reviews:
@@ -88,10 +88,10 @@ def remove_review():
         return {'message': 'Missing user_id or volume_id'}, 400
     
     book = db.session.query(UserToBooks).filter_by(user_id=user_id, volume_id=volume_id).first()
-    book_id = book.id
 
-    if not book_id:
+    if not book:
         return {'message': 'Missing book entry'}, 404
+    book_id = book.id
 
     review = db.session.query(Reviews).filter_by(user_id=user_id, book_id=book_id).first()
 
@@ -116,10 +116,10 @@ def edit_review():
         return {'message': 'Missing user_id or volume_id'}, 400
     
     book = db.session.query(UserToBooks).filter_by(user_id=user_id, volume_id=volume_id).first()
-    book_id = book.id
 
-    if not book_id:
+    if not book:
         return {'message': 'Missing book entry'}, 404
+    book_id = book.id
 
     review = db.session.query(Reviews).filter_by(user_id=user_id, book_id=book_id).first()
 
