@@ -4,7 +4,7 @@ from sqlalchemy import func
 from datetime import datetime
 
 from models import UserToBooks, WeeklyBooks
-from book import fetch_book_info
+from endpoints.book import fetch_book_info
 
 weeklyBookBlueprint = Blueprint('weeklyBookBlueprint', __name__)
 
