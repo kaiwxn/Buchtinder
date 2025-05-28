@@ -73,13 +73,13 @@ def loginUser():
 
 
 # Admin endpoints
-@userBlueprint.route('/get_users', methods=['GET'])
+@userBlueprint.route('/get', methods=['GET'])
 def get_users():
     users = list(db.session.query(Users).all())
     return jsonify([[user.name, user.created_at] for user in users])
 
 
-@userBlueprint.post('/create_user')
+@userBlueprint.post('/create')
 def create_user():
     data = request.get_json()
 

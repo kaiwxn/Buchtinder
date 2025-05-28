@@ -45,7 +45,7 @@ GOOGLE_BOOKS_API = 'https://www.googleapis.com/books/v1/volumes'
 MAX_RESULTS_PER_PAGE = 10
 
 # Searches google books for provided query
-@bookBlueprint.get('/search_books')
+@bookBlueprint.get('/search')
 def search_books():
     query = str(request.args.get("q")) or "_"
     search_page = int(request.args.get("page", 0))
@@ -90,7 +90,7 @@ def search_books():
 
 
 
-@bookBlueprint.post('/add_book')
+@bookBlueprint.post('/add')
 def add_book():
     data = request.get_json()
 
@@ -114,7 +114,7 @@ def add_book():
 
 
 
-@bookBlueprint.delete('/remove_book')
+@bookBlueprint.delete('/remove')
 def remove_book():
     data = request.get_json()
     
@@ -136,7 +136,7 @@ def remove_book():
 
 
 
-@bookBlueprint.get('/get_books_from_user')
+@bookBlueprint.get('/get_from_user')
 def get_books_from_user():
     user_id = request.args.get('user_id')
 

@@ -6,7 +6,7 @@ from database import db
 reviewBlueprint = Blueprint('reviews', __name__)
 
 
-@reviewBlueprint.post('/add_review')
+@reviewBlueprint.post('/add')
 def add_review():
     data = request.get_json()
 
@@ -33,7 +33,7 @@ def add_review():
     return{'message': 'Successfully added review', 'review_id': newReview.id}, 201
 
 
-@reviewBlueprint.get('/get_reviews_by_user')
+@reviewBlueprint.get('/get_by_user')
 def get_reviews_by_user():
     user_id = request.args.get('user_id')
 
@@ -49,7 +49,7 @@ def get_reviews_by_user():
     return jsonify(results)
 
 
-@reviewBlueprint.get('/get_reviews_by_book')
+@reviewBlueprint.get('/get_by_book')
 def get_reviews_by_book():
     volume_id = request.args.get('volume_id')
 
@@ -77,7 +77,7 @@ def get_reviews_by_book():
     return jsonify(results)
 
 
-@reviewBlueprint.delete('/remove_review')
+@reviewBlueprint.delete('/remove')
 def remove_review():
     data = request.get_json()
     
@@ -104,7 +104,7 @@ def remove_review():
     return{'message': 'Successfully removed review'}, 200
 
 
-@reviewBlueprint.put('/edit_review')
+@reviewBlueprint.put('/edit')
 def edit_review():
     data = request.get_json()
 

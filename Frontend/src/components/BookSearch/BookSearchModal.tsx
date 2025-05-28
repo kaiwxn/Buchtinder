@@ -16,7 +16,7 @@ function BookSearchModal({ onClose }: BookSearchModalProps) {
         setLoading(true);
         try {
             const response = await fetch(
-                `http://127.0.0.1:5000/books/search_books?q=${encodeURIComponent(q)}&page=${pageNumber}`,
+                `http://127.0.0.1:5000/books/search?q=${encodeURIComponent(q)}&page=${pageNumber}`,
             );
             if (!response.ok) {
                 throw new Error("Failed to fetch books");
