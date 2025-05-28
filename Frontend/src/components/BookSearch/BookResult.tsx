@@ -9,6 +9,8 @@ const USER_ID = "2";
 
 type Props = {
     book: BookJsonObject;
+    savedIds: string[];
+    refreshSavedIds: () => void;
 };
 
 function BookResultItem({ book }: Props) {
@@ -24,6 +26,7 @@ function BookResultItem({ book }: Props) {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ user_id: USER_ID, volume_id: book.volume_id }),
             });
+            refreshSavedIds();
         } catch (error) {
             console.error("Fehler beim Hinzufügen:", error);
         } finally {
@@ -40,6 +43,7 @@ function BookResultItem({ book }: Props) {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ user_id: USER_ID, volume_id: book.volume_id }),
             });
+            refreshSavedIds();
         } catch (error) {
             console.error("Fehler beim Entfernen:", error);
         } finally {

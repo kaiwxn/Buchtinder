@@ -12,7 +12,7 @@ type BookInfo = {
     language?: string;
 };
 
-const USER_ID = "user123"; // 🔐 Ersetze durch echte User-ID bei Bedarf
+const USER_ID = "user123"; //  Ersetze durch echte User-ID bei Bedarf
 
 function UserBookList() {
     const [books, setBooks] = useState<BookInfo[]>([]);
@@ -41,7 +41,7 @@ function UserBookList() {
         }
     };
 
-    // ✅ Entfernt ein Buch aus der Liste
+    //  Entfernt ein Buch aus der Liste
     const removeBook = async (volume_id: string) => {
         try {
             await fetch("http://127.0.0.1:5000/books/remove_book", {

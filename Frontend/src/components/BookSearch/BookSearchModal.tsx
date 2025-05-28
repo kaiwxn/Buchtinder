@@ -11,6 +11,8 @@ function BookSearchModal({ onClose }: BookSearchModalProps) {
     const [results, setResults] = useState<BookJsonObject[]>([]);
     const [page, setPage] = useState(0);
     const [loading, setLoading] = useState(false);
+    const [savedIds, setSavedIds] = useState<string[]>([]);
+
 
     const fetchBooks = async (q: string, pageNumber: number) => {
         setLoading(true);
@@ -30,6 +32,16 @@ function BookSearchModal({ onClose }: BookSearchModalProps) {
         }
     };
 
+    const fetchSavedIds = async () => {
+    try {
+        const res = await fetch(`http://127.0.0.1:5000/books/get_user_book_ids?user_id=${USER_ID}`);
+        const data = await res.json();
+        setSavedIds(data);
+        } catch (err) {
+        console.error("Fehler beim Laden der gespeicherten Bücher:", err);
+        }
+    };
+
     const scrollToTop = () => {
         document
             .getElementById("book-results-list")
@@ -37,6 +49,7 @@ function BookSearchModal({ onClose }: BookSearchModalProps) {
     };
 
     useEffect(() => {
+        fetchSavedIds();
         if (!lastQuery.trim()) return;
         scrollToTop();
         fetchBooks(lastQuery, page);
@@ -101,7 +114,7 @@ function BookSearchModal({ onClose }: BookSearchModalProps) {
                     className="max-h-[60vh] space-y-2 overflow-x-clip overflow-y-auto"
                 >
                     {results.map((book, index) => (
-                        <BookResultItem key={index} book={book}/>
+                        <BookResultItem key={index} book={book} savedIds={savedIds} refreshSavedIds={fetchSavedIds}/>
                     ))}
                     <PageChanger
                         page={page}
