@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
-from models import Reviews, UserToBooks
-from database import db
+
+from services import review_service
+
 
 # Groups these endpoints together
 reviewBlueprint = Blueprint('reviews', __name__)
@@ -15,22 +16,10 @@ def add_review():
     review_text = data.get('review_text')
 
     if not user_id or not book_id or not review_text:
-        return {'message': 'Missing required data fields'}, 400
-    
-    check_book_entry = db.session.query(UserToBooks).filter_by(id=book_id, user_id=user_id).first()
-    if not check_book_entry:
-        return {'message': 'Book by this user not found'}, 403
-    
-    check_review_existence = db.session.query(Reviews).filter_by(user_id=user_id, book_id=book_id).first()
-    if check_review_existence:
-        return {'message': 'Book is already reviewed by this user'}, 400 
-    
-    newReview = Reviews(user_id=user_id, book_id=book_id, review_text=review_text)
-    db.session.add(newReview)
-    db.session.commit()
-    db.session.refresh(newReview)
+        return jsonify({'message': 'Missing required data fields'}), 400
 
-    return{'message': 'Successfully added review', 'review_id': newReview.id}, 201
+    message, status = review_service.add_review(user_id, book_id, review_text)
+    return jsonify(message), status
 
 
 @reviewBlueprint.get('/get_by_user')
@@ -38,15 +27,10 @@ def get_reviews_by_user():
     user_id = request.args.get('user_id')
 
     if not user_id:
-        return {'message': 'Missing user_id'}, 400
-    
-    reviews = db.session.query(Reviews).filter_by(user_id=user_id).all()
+        return jsonify({'message': 'Missing user_id'}), 400
 
-    results = []
-    for review in reviews:
-        results.append({'review_id': review.id})
-
-    return jsonify(results)
+    result, status = review_service.get_reviews_by_user(user_id)
+    return jsonify(result), status
 
 
 @reviewBlueprint.get('/get_by_book')
@@ -54,27 +38,10 @@ def get_reviews_by_book():
     volume_id = request.args.get('volume_id')
 
     if not volume_id:
-        return {'message': 'Missing volume_id'}, 400
+        return jsonify({'message': 'Missing volume_id'}), 400
     
-    book_ids = []
-    books = db.session.query(UserToBooks).filter_by(volume_id=volume_id).all()
-    for book in books:
-        book_ids.append(book.id)
-
-    reviews = []
-    for book_id in book_ids:
-        reviews.append(db.session.query(Reviews).filter_by(book_id=book_id).all())
-
-    results = []
-    for review in reviews:
-        results.append({
-            'review_id': review.id,
-            'user_id': review.user_id,
-            'book_id': review.book_id,
-            'review_text': review.review_text,
-        })
-
-    return jsonify(results)
+    result, status = review_service.get_reviews_by_book(volume_id)
+    return jsonify(result), status
 
 
 @reviewBlueprint.delete('/remove')
@@ -85,23 +52,10 @@ def remove_review():
     volume_id = data.get('volume_id')
 
     if not user_id or not volume_id:
-        return {'message': 'Missing user_id or volume_id'}, 400
+        return jsonify({'message': 'Missing user_id or volume_id'}), 400
     
-    book = db.session.query(UserToBooks).filter_by(user_id=user_id, volume_id=volume_id).first()
-
-    if not book:
-        return {'message': 'Missing book entry'}, 404
-    book_id = book.id
-
-    review = db.session.query(Reviews).filter_by(user_id=user_id, book_id=book_id).first()
-
-    if not review:
-        return {'message': 'Missing review entry'}, 404
-    
-    db.session.delete(review)
-    db.session.commit()
-
-    return{'message': 'Successfully removed review'}, 200
+    message, status = review_service.remove_review(user_id, volume_id)
+    return jsonify(message), status
 
 
 @reviewBlueprint.put('/edit')
@@ -112,21 +66,8 @@ def edit_review():
     volume_id = data.get('volume_id')
     new_text = data.get('review_text')
 
-    if not user_id or not volume_id:
-        return {'message': 'Missing user_id or volume_id'}, 400
+    if not user_id or not volume_id or not new_text:
+        return jsonify({'message': 'Missing required data fields'}), 400
     
-    book = db.session.query(UserToBooks).filter_by(user_id=user_id, volume_id=volume_id).first()
-
-    if not book:
-        return {'message': 'Missing book entry'}, 404
-    book_id = book.id
-
-    review = db.session.query(Reviews).filter_by(user_id=user_id, book_id=book_id).first()
-
-    if not review:
-        return {'message': 'Missing review entry'}, 404
-    
-    review.review_text = new_text
-    db.session.commit()
-
-    return{'message': 'Successfully edited review'}, 200
+    message, status = review_service.edit_review(user_id, volume_id, new_text)
+    return jsonify(message), status
