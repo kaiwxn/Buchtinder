@@ -1,12 +1,15 @@
 import { Heart, Tag, X } from "lucide-react";
 import { animate, motion, useMotionValue, useTransform } from "motion/react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 
 type CardProps = {
     id: number;
     setCards: (cards: any) => void;
     cards: { id: number; text: string }[];
 };
+
+const BACKUP_IMAGE_SRC =
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQSiaxXHKRBmNrpzuius2fLvoyrPjPWiu2jDg&s";
 
 function Card({ id, setCards, cards }: CardProps) {
     const x = useMotionValue(0);
@@ -30,9 +33,45 @@ function Card({ id, setCards, cards }: CardProps) {
         setCards((prev: any) => prev.filter((v: any) => v.id !== id));
     };
 
+    const scrollRefTop = useRef<HTMLDivElement | null>(null);
+    const scrollRefBottom = useRef<HTMLDivElement | null>(null);
+
+    useEffect(() => {
+        if (!isFront) return;
+
+        const setupScroll = (el: HTMLDivElement | null) => {
+            if (!el) return;
+
+            let direction = 1;
+            const step = 1;
+            const speed = 15; // Update in milliseconds
+
+            const scroll = () => {
+                const maxScrollLeft = el.scrollWidth - el.clientWidth;
+
+                el.scrollLeft += direction * step;
+
+                if (el.scrollLeft >= maxScrollLeft) direction = -1;
+                else if (el.scrollLeft <= 0) direction = 1;
+            };
+
+            const intervalId = setInterval(scroll, speed);
+            return () => clearInterval(intervalId);
+        };
+
+        const cleanups = [
+            setupScroll(scrollRefTop.current),
+            setupScroll(scrollRefBottom.current),
+        ].filter(Boolean); // remove undefined
+
+        return () => {
+            cleanups.forEach((cleanup) => cleanup?.());
+        };
+    }, [isFront]);
+
     return (
         <motion.div
-            className="absolute flex h-130 w-110 origin-bottom rounded-lg bg-gradient-to-b from-white to-black hover:cursor-grab active:cursor-grabbing"
+            className="absolute h-130 w-110 origin-bottom rounded-lg bg-gradient-to-b from-white to-black hover:cursor-grab active:cursor-grabbing"
             style={{
                 x,
                 backgroundColor: "gray",
@@ -52,6 +91,39 @@ function Card({ id, setCards, cards }: CardProps) {
             dragConstraints={{ left: 0, right: 0 }}
             onDragEnd={handleDragEnd}
         >
+            <div className="pointer-events-none top-0 mt-8 flex justify-around">
+                <div
+                    ref={scrollRefTop}
+                    className="scrollbar-hide flex h-full w-full items-center space-x-6 overflow-x-auto px-6"
+                    style={{ scrollbarWidth: "none" }}
+                >
+                    {Array.from({ length: 5 }).map((_, idx) => (
+                        <img
+                            key={idx}
+                            src={BACKUP_IMAGE_SRC}
+                            alt={`Book Cover ${idx + 1}`}
+                            className="h-32 w-24 rounded object-cover shadow-md"
+                        />
+                    ))}
+                </div>
+            </div>
+            <div className="pointer-events-none top-0 mt-8 flex justify-around">
+                <div
+                    ref={scrollRefBottom}
+                    className="scrollbar-hide flex h-full w-full items-center space-x-6 overflow-x-auto px-6"
+                    style={{ scrollbarWidth: "none" }}
+                >   
+                <div className="w-10"></div>
+                    {Array.from({ length: 5 }).map((_, idx) => (
+                        <img
+                            key={idx}
+                            src={BACKUP_IMAGE_SRC}
+                            alt={`Book Cover ${idx + 1}`}
+                            className="h-32 w-24 rounded object-cover shadow-md"
+                        />
+                    ))}
+                </div>
+            </div>
             <div className="absolute bottom-0 h-1/3 w-full rounded-b-lg p-4 text-white">
                 <div className="mx-5 mb-10 flex h-15 w-full items-center space-x-5">
                     <img
