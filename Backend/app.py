@@ -2,9 +2,10 @@ from flask import Flask
 from flask_cors import CORS
 
 from database import db
-from user import userBlueprint
-from book import bookBlueprint
-from review import reviewBlueprint
+from endpoints.user import userBlueprint
+from endpoints.book import bookBlueprint
+from endpoints.weekly_book import weeklyBookBlueprint
+from endpoints.review import reviewBlueprint
 
 
 app = Flask(__name__)
@@ -13,7 +14,9 @@ CORS(app)
 
 app.register_blueprint(userBlueprint, url_prefix='/users')
 app.register_blueprint(bookBlueprint, url_prefix='/books')
-app.register_blueprint(reviewBlueprint, url_prefix='/reviews')
+app.register_blueprint(weeklyBookBlueprint, url_prefix='/weekly_book')
+app.register_blueprint(reviewBlueprint, url_prefix='/review')
+
 
 # Database setup
 db.init_app(app)

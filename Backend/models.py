@@ -1,9 +1,9 @@
 from sqlalchemy import Column, Integer, LargeBinary, String, ForeignKey, Text
-from sqlalchemy import DateTime
+from sqlalchemy import DateTime, UniqueConstraint
 from sqlalchemy.orm import relationship
 from datetime import datetime, timezone
 
-from database import Base, db
+from database import Base
 
 
 class Users(Base):
@@ -52,7 +52,7 @@ class Reviews(Base):
     user = relationship('Users', backref='Reviews')
     book = relationship('UserToBooks', backref='Reviews')
 
-    __table_args__ = (db.UniqueConstraint('user_id', 'book_id', name='user_book_review_Constraint'),)
+    __table_args__ = (UniqueConstraint('user_id', 'book_id', name='user_book_review_Constraint'),)
 
     def __init__(self, user_id=None, book_id=None, review_text=None):
         self.user_id = user_id
@@ -62,3 +62,17 @@ class Reviews(Base):
 
     def __repr__(self):
         return f'<Review user_id={self.user_id!r}, book_id={self.book_id}>'
+
+    
+class WeeklyBooks(Base):
+    __tablename__ = 'WeeklyBooks'
+    id = Column(Integer, primary_key = True)
+    volume_id = Column(String(255), nullable = False)
+    created_at = Column(DateTime, default=datetime.now(timezone.utc), nullable=False)
+
+    def __init__(self, volume_id=None):
+        self.volume_id = volume_id
+        self.created_at = datetime.now(timezone.utc)
+
+    def __repr__(self):
+        return f'<WeeklyBook {self.volume_id!r}>'
