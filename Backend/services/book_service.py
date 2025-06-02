@@ -79,6 +79,8 @@ def search_books(query: str, search_page: int):
 
     return results, 200
 
+    for book in data.get('items', []):
+        results.append(parse_book_item(book))
 
 def add_book(user_id: int, volume_id: str):    
     check_existence = db.session.query(UserToBooks).filter_by(user_id=user_id, volume_id=volume_id).first()

@@ -32,7 +32,7 @@ function BookResultItem({ book }: Props) {
                             {book.authors?.slice(0, 3).join(", ")}
                         </p>
 
-                        <div className="justify-between space-x-2">
+                        <div className="justify-between space-x-2 max-w-[80%] overflow whitespace-nowrap">
                             {book.categories?.map((category, index) => (
                                 <div
                                     key={index}

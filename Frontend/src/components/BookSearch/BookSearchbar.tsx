@@ -12,9 +12,7 @@ function BookSearchbar({
     onManualSearch,
 }: BookSearchbarProps) {
     const handleSearch = () => {
-        if (query.trim()) {
-            onManualSearch();
-        }
+        onManualSearch();
     };
 
     return (
