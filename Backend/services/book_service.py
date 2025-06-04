@@ -2,9 +2,6 @@ import requests
 
 from models import UserToBooks
 from database import db
-##import user_id from frontend##
-user_id = 1
-
 
 GOOGLE_BOOKS_API = 'https://www.googleapis.com/books/v1/volumes'
 MAX_RESULTS_PER_PAGE = 10
@@ -18,11 +15,6 @@ def fetch_book_info(volume_id: str):
     if response.status_code != 200:
         return {'message': 'Error fetching info from Google'}, 500
 
-    addedByUser = db.session.query(UserToBooks).filter_by(user_id = user_id, volume_id=volume_id).first()
-    if not addedByUser:
-        addedBool = False
-    else:
-        addedBool = True
 
     data = response.json()
     volume_info = data.get('volumeInfo', {})
@@ -43,7 +35,6 @@ def fetch_book_info(volume_id: str):
         'info_link': f'https://books.google.de/books?id={volume_id}',
         'categories': volume_info.get('categories', []),
         'language': volume_info.get('language'),
-        'addedBool': addedBool,
     }, 200
 
 
@@ -87,6 +78,9 @@ def search_books(query: str, search_page: int):
         })
 
     return results, 200
+
+    for book in data.get('items', []):
+        results.append(parse_book_item(book))
 
 def add_book(user_id: int, volume_id: str):    
     check_existence = db.session.query(UserToBooks).filter_by(user_id=user_id, volume_id=volume_id).first()
