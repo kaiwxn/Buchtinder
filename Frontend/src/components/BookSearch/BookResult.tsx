@@ -1,6 +1,7 @@
 import { Check, Plus } from "lucide-react";
 import { BookJsonObject } from "./types";
 import { useState } from "react";
+import { USER_ID } from "../../pages/Login/Login";
 
 type Props = {
     book: BookJsonObject;
@@ -10,7 +11,39 @@ const BACKUP_IMAGE_SRC =
     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQSiaxXHKRBmNrpzuius2fLvoyrPjPWiu2jDg&s";
 
 function BookResultItem({ book }: Props) {
-    const [isSelected, setIsSelected] = useState(false);
+    const [isSaved, setIsSaved] = useState(false);
+
+    const handleAdd = async () => {
+        setIsSaved(true);
+        try {
+            await fetch("http://127.0.0.1:5000/books/add", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    user_id: USER_ID,
+                    volume_id: book.volume_id,
+                }),
+            });
+        } catch (error) {
+            console.error("Fehler beim Hinzufügen:", error);
+        }
+    };
+
+    const handleRemove = async () => {
+        setIsSaved(false);
+        try {
+            await fetch("http://127.0.0.1:5000/books/remove", {
+                method: "DELETE",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    user_id: USER_ID,
+                    volume_id: book.volume_id,
+                }),
+            });
+        } catch (error) {
+            console.error("Fehler beim Entfernen:", error);
+        }
+    };
 
     return (
         <>
@@ -32,7 +65,7 @@ function BookResultItem({ book }: Props) {
                             {book.authors?.slice(0, 3).join(", ")}
                         </p>
 
-                        <div className="justify-between space-x-2 max-w-[80%] overflow whitespace-nowrap">
+                        <div className="overflow max-w-[80%] justify-between space-x-2 whitespace-nowrap">
                             {book.categories?.map((category, index) => (
                                 <div
                                     key={index}
@@ -45,21 +78,18 @@ function BookResultItem({ book }: Props) {
                     </div>
                 </div>
                 <div className="flex-1"></div>
-                {isSelected ? (
+                {isSaved ? (
                     <div className="mr-5 flex items-center pr-5">
                         <button
                             className="btn btn-round bg-green-500 text-white hover:bg-green-600"
-                            onClick={() => setIsSelected(true)}
+                            onClick={handleRemove}
                         >
                             <Check color="white" />
                         </button>
                     </div>
                 ) : (
                     <div className="mr-5 flex items-center pr-5">
-                        <button
-                            className="btn btn-round"
-                            onClick={() => setIsSelected(false)}
-                        >
+                        <button className="btn btn-round" onClick={handleAdd}>
                             <Plus />
                         </button>
                     </div>

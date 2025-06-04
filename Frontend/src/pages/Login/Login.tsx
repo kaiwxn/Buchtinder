@@ -8,6 +8,8 @@ type LoginProps = {
     setToken: (token: string) => void;
 };
 
+export let USER_ID = 1;
+
 function Login({ setToken }: LoginProps) {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -17,6 +19,7 @@ function Login({ setToken }: LoginProps) {
         setLoading(true);
         try {
             const data = await login(username, password);
+            USER_ID = data.user_id; 
             setToken("irgendwas"); // TODO: change token
         } catch (error: any) {
             console.error("Fehler bei Login:", error);
@@ -33,6 +36,7 @@ function Login({ setToken }: LoginProps) {
         setLoading(true);
         try {
             const data = await register(username, password);
+            USER_ID = data.user_id; 
             setToken("irgendwas");
         } catch (error: any) {
             console.error("Fehler bei Registrierung:", error);
