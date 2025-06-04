@@ -11,8 +11,9 @@ bookBlueprint = Blueprint('books', __name__)
 def search_books():
     query = str(request.args.get("q", ""))
     search_page = int(request.args.get("page", 0))
+    user_id = int(request.args.get("userID", 1))
     
-    result, status = book_service.search_books(query, search_page)
+    result, status = book_service.search_books(query, search_page, user_id)
     return jsonify(result), status
 
 

@@ -39,7 +39,7 @@ def fetch_book_info(volume_id: str):
 
 
 # Searches google books for provided query
-def search_books(query: str, search_page: int):
+def search_books(query: str, search_page: int, user_id: int):
     # Fetch the books matching the search query 
     # Search page starts from 0
     params = {
@@ -52,13 +52,19 @@ def search_books(query: str, search_page: int):
 
     if response.status_code != 200:
         return {'message': 'Error fetching books from Google'}, 500
-    
+
     data = response.json()
     results = []
 
     for item in data.get('items', []):
         volume_info = item.get('volumeInfo', {})
         identifiers = volume_info.get('industryIdentifiers', []) 
+        
+        isSavedbyUser = db.session.query(UserToBooks).filter_by(user_id=user_id, volume_id=item.get('id')).first()
+        if not isSavedbyUser:
+            isSaved = False
+        else:
+            isSaved = True
 
         isbn_13 = None
         for identifier in identifiers:
@@ -75,12 +81,11 @@ def search_books(query: str, search_page: int):
             'info_link': f'https://books.google.de/books?id={item.get('id')}',
             'categories': volume_info.get('categories', []),
             'language': volume_info.get('language'),
+            'isSaved': isSaved
         })
 
     return results, 200
 
-    for book in data.get('items', []):
-        results.append(parse_book_item(book))
 
 def add_book(user_id: int, volume_id: str):    
     check_existence = db.session.query(UserToBooks).filter_by(user_id=user_id, volume_id=volume_id).first()
