@@ -1,24 +1,22 @@
 import { Heart, Tag, X } from "lucide-react";
 import { animate, motion, useMotionValue, useTransform } from "motion/react";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { USER_ID } from "../Login/Login";
 import { CardData } from "./types";
 
 type CardProps = CardData & {
-    id: number;
     setCards: (cards: any) => void;
-    cardNumber: number;
+    cards: CardData[];
 };
 
 function Card({
-    id,
     friend_id,
     friend_name,
     imgSrc,
     favoriteCategories,
     bookSrcs,
     setCards,
-    cardNumber,
+    cards,
 }: CardProps) {
     const cardX = useMotionValue(0);
     const rotateRaw = useTransform(cardX, [-150, 150], [-18, 18]);
@@ -26,22 +24,12 @@ function Card({
 
     const scrollRefTop = useRef<HTMLDivElement | null>(null);
     const scrollRefBottom = useRef<HTMLDivElement | null>(null);
-    const isFront = id === cardNumber - 1;
+
+    const onTop = friend_id === cards[cards.length - 1]?.friend_id;
 
     const rotate = useTransform(() => {
         return `${rotateRaw.get()}deg`;
     });
-
-    const handleDragEnd = () => {
-        if (Math.abs(cardX.get()) > 100) {
-            setCards((prev: any) => prev.filter((v: any) => v.id !== id));
-        }
-    };
-    const handleButtonRemove = async (direction: "left" | "right") => {
-        const to = direction === "left" ? -200 : 200; // Swipe simulieren
-        await animate(cardX, to, { duration: 0.3 });
-        setCards((prev: any) => prev.filter((v: any) => v.id !== id));
-    };
 
     const addFriend = async () => {
         try {
@@ -52,7 +40,7 @@ function Card({
                 },
                 body: JSON.stringify({
                     user_id: USER_ID,
-                    friend_id: id,
+                    friend_id: friend_id,
                 }),
             });
             if (!response.ok) {
@@ -63,8 +51,28 @@ function Card({
         }
     };
 
+    const handleDragEnd = async () => {
+        if (Math.abs(cardX.get()) > 100) {
+            // const direction = cardX.get() > 0 ? "right" : "left";
+            // if (direction === "right") {
+            //     await addFriend();
+            // }
+            setCards((prev: any) => prev.filter((v: any) => v.friend_id !== friend_id));
+        }
+    };
+    const handleButtonSwipe = async (direction: "left" | "right") => {
+        const to = direction === "left" ? -200 : 200; // Swipe simulieren
+        if (direction === "right") {
+            addFriend();
+        }
+        await animate(cardX, to, {
+            duration: 0.3,
+        });
+        setCards((prev: any) => prev.filter((v: any) => v.friend_id !== friend_id));
+    };
+
     useEffect(() => {
-        if (!isFront) return;
+        if (!onTop) return;
 
         const scrollElements = [scrollRefTop.current, scrollRefBottom.current];
         const intervals: number[] = [];
@@ -91,7 +99,8 @@ function Card({
         return () => {
             intervals.forEach(window.clearInterval);
         };
-    }, [isFront]);
+    }, [onTop]);
+
 
     const renderImages = (srcs: string[]) =>
         Array.from({ length: srcs.length }).map((_, idx) => (
@@ -113,15 +122,15 @@ function Card({
                 backgroundPosition: "center",
                 rotate,
                 opacity,
-                boxShadow: isFront
+                boxShadow: onTop
                     ? "0 20px 25px -5px rgb(0 0 0 / 0.5), 0 8px 10px -6px rgb(0 0 0 / 0.5)"
                     : undefined,
                 transition: "0.125s transform",
             }}
             animate={{
-                scale: isFront ? 1 : 0.99,
+                scale: onTop ? 1 : 0.99,
             }}
-            drag={isFront ? "x" : false}
+            drag={onTop ? "x" : false}
             dragConstraints={{ left: 0, right: 0 }}
             onDragEnd={handleDragEnd}
         >
@@ -164,7 +173,7 @@ function Card({
                 <div className="flex w-full justify-between">
                     <button
                         className="btn btn-ghost ml-3 space-x-1 px-5 py-6 hover:scale-105"
-                        onClick={() => handleButtonRemove("left")}
+                        onClick={() => handleButtonSwipe("left")}
                     >
                         <X size={30} />
                         <p className="text-3xl font-semibold">Next</p>
@@ -172,7 +181,7 @@ function Card({
 
                     <button
                         className="btn btn-ghost mr-3 space-x-1 px-5 py-6 hover:scale-105"
-                        onClick={() => handleButtonRemove("right")}
+                        onClick={() => handleButtonSwipe("right")}
                     >
                         <Heart size={30} />
                         <p className="text-3xl font-semibold">Like</p>

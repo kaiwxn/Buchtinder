@@ -6,8 +6,8 @@ const BACKUP_IMAGE_SRC =
 const BACKUP_PROFILE_IMAGE_SRC =
     "https://as1.ftcdn.net/jpg/03/53/11/00/1000_F_353110097_nbpmfn9iHlxef4EDIhXB1tdTD0lcWhG9.jpg";
 
-const cardsData = Array.from({ length: 10 }, () => ({
-    friend_id: 1,
+const cardsData = Array.from({ length: 10 }, (_, i) => ({
+    friend_id: i + 1,
     friend_name: "Max",
     imgSrc: BACKUP_PROFILE_IMAGE_SRC,
     favoriteCategories: ["Fantasy", "Science Fiction", "Mystery"],
