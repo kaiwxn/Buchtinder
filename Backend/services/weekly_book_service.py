@@ -13,7 +13,7 @@ def get_weekly_book():
     latest = db.session.query(WeeklyBooks).order_by(WeeklyBooks.id.desc()).first()
     
     # Get new weekly book only on mondays and if no entry from today exists
-    if today.weekday() != 5 or (latest and latest.created_at.date() == today):
+    if today.weekday() != 0 or (latest and latest.created_at.date() == today):
         if latest:
             volume_id = latest.volume_id
             book_info = fetch_book_info(volume_id)
