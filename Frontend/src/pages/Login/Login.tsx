@@ -19,7 +19,7 @@ function Login({ setToken }: LoginProps) {
         setLoading(true);
         try {
             const data = await login(username, password);
-            USER_ID = data.user_id; 
+            USER_ID = data.user_id;
             setToken("irgendwas"); // TODO: change token
         } catch (error: any) {
             console.error("Fehler bei Login:", error);

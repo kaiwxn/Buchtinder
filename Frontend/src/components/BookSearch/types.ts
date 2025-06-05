@@ -7,6 +7,7 @@ export type BookJsonObject = {
     info_link: string;
     categories?: string[];
     language?: string;
+    isSaved?: boolean;
 };
 
 export type BookSearchModalProps = {

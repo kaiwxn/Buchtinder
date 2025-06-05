@@ -4,11 +4,13 @@ import { BookJsonObject, BookSearchModalProps } from "./types";
 import BookResultItem from "./BookResult";
 import BookSearchbar from "./BookSearchbar";
 import PageChanger from "./PageChanger";
+import { USER_ID } from "../../pages/Login/Login";
 
 function BookSearchModal({ onClose }: BookSearchModalProps) {
     const [query, setQuery] = useState(""); // Input value for the search bar
     const [lastQuery, setLastQuery] = useState(""); // Last search query
     const [results, setResults] = useState<BookJsonObject[]>([]);
+    const [savedBooks, setSavedBooks] = useState<Set<string>>(new Set());
     const [page, setPage] = useState(0);
     const [loading, setLoading] = useState(false);
 
@@ -23,10 +25,52 @@ function BookSearchModal({ onClose }: BookSearchModalProps) {
             }
             const books = await response.json();
             setResults(books);
+            const saved: Set<string> = new Set(
+                (books as BookJsonObject[])
+                    .filter((b: BookJsonObject) => b.isSaved)
+                    .map((b: BookJsonObject) => b.volume_id)
+            );
+            setSavedBooks(saved);
         } catch (error) {
             console.error("Error fetching books:", error);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const handleAdd = async (volume_id: string) => {
+        setSavedBooks((prev) => new Set(prev).add(volume_id));
+        try {
+            await fetch("http://127.0.0.1:5000/books/add", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    user_id: USER_ID,
+                    volume_id: volume_id,
+                }),
+            });
+        } catch (error) {
+            console.error("Fehler beim Hinzufügen:", error);
+        }
+    };
+
+    const handleRemove = async (volume_id: string) => {
+        setSavedBooks((prev) => {
+            const newSet = new Set(prev);
+            newSet.delete(volume_id);
+            return newSet;
+        });
+        try {
+            await fetch("http://127.0.0.1:5000/books/remove", {
+                method: "DELETE",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    user_id: USER_ID,
+                    volume_id: volume_id,
+                }),
+            });
+        } catch (error) {
+            console.error("Fehler beim Entfernen:", error);
         }
     };
 
@@ -93,7 +137,13 @@ function BookSearchModal({ onClose }: BookSearchModalProps) {
                     className="max-h-[60vh] space-y-2 overflow-x-clip overflow-y-auto"
                 >
                     {results.map((book, index) => (
-                        <BookResultItem key={index} book={book} />
+                        <BookResultItem
+                            key={index}
+                            book={book}
+                            isSaved={savedBooks.has(book.volume_id)}
+                            handleAdd={handleAdd}
+                            handleRemove={handleRemove}
+                        />
                     ))}
                     <PageChanger
                         page={page}
