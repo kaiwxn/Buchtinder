@@ -8,7 +8,7 @@ from datetime import datetime
 friendBlueprint = Blueprint('friend', __name__)
 
 
-@friendBlueprint.post('/add_match')
+@friendBlueprint.post('/add')
 def add_friend_match():
     data = request.get_json()
 
@@ -41,7 +41,7 @@ def add_friend_match():
 
 
 
-@friendBlueprint.get('/get_friends')
+@friendBlueprint.get('/get')
 def get_friends():
     user_id = request.args.get('user_id')
 
@@ -51,5 +51,65 @@ def get_friends():
     friendships = db.session.query(Friendships).filter_by(user_id=user_id).all()
     friends = []
     for f in friendships:
-        friends.append({f.id})
+        user = db.session.get(Users, f.friend_id)
+        book_count = db.session.query(Books).filter_by(user_id=user.id).count()
+        friends.append({
+            "friends_id": user_id,
+            "name": user.name,
+            "created_at": f.created_at.isoformat(),
+            "book_count": book_count,
+        })
+    
     return jsonify(friends)
+
+@friendBlueprint.get('/get_friends_books')
+def get_friends_books():
+    friend_id = request.args.get("friend_id")
+
+    books = db.session.query(Books).filter_by(user_id=friend_id).all()
+    results = []
+
+    for book in books:
+        results.append({
+            'volume_id': book.volume_id,
+            'created_at': book.created_at,
+        })
+
+    return jsonify(results)
+
+@friendBlueprint.delete('/delete')
+def delete_friend():
+    user_id = request.args.get('user_id')
+    friend_id = request.args.get('friend_id')
+    
+    if not user_id or not friend_id:
+        return {"message": "Missing UserID or FriendID"}, 400
+
+    deleted = db.session.query(Friendships).filter(
+        or_(
+            and_(Friendships.user_id == user_id, Friendships.friend_id == friend_id),
+            and_(Friendships.user_id == friend_id, Friendships.friend_id == user_id)
+        )
+    ).delete(synchronize_session=False)
+    
+    db.session.commit()
+    return {"message": f"{deleted} friendships removed"}
+
+
+@friendBlueprint.get('/get_friend_of_friends')
+def get_friends_of_friend():
+    friend_id = request.args.get('friend_id')
+
+    friendships = db.session.query(Friendships).filter_by(user_id=friend_id).all()
+    friends = []
+    for f in friendships:
+        user = db.session.get(Users, f.friend_id)
+        friends.append({
+            "friend_id": user.id,
+            "name": user.name,
+            "created_at": f.created_at.isoformat()
+        })
+
+    return jsonify(friends)
+
+
