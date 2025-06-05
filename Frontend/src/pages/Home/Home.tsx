@@ -8,9 +8,9 @@ const BACKUP_PROFILE_IMAGE_SRC =
 
 const cardsData = Array.from({ length: 10 }, (_, i) => ({
     friend_id: i + 1,
-    friend_name: "Max",
+    friend_name: "Maxaaaaaaaaaaaaaaaaaaaaaaaaaa",
     imgSrc: BACKUP_PROFILE_IMAGE_SRC,
-    favoriteCategories: ["Fantasy", "Science Fiction", "Mystery"],
+    favoriteCategories: ["Fantasy", "Science Fiction", "Mystery", "Romance", "Thriller"],
     bookSrcs: [
         BACKUP_IMAGE_SRC,
         BACKUP_IMAGE_SRC,

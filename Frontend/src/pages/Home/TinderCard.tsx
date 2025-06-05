@@ -57,7 +57,9 @@ function Card({
             // if (direction === "right") {
             //     await addFriend();
             // }
-            setCards((prev: any) => prev.filter((v: any) => v.friend_id !== friend_id));
+            setCards((prev: any) =>
+                prev.filter((v: any) => v.friend_id !== friend_id),
+            );
         }
     };
     const handleButtonSwipe = async (direction: "left" | "right") => {
@@ -68,7 +70,9 @@ function Card({
         await animate(cardX, to, {
             duration: 0.3,
         });
-        setCards((prev: any) => prev.filter((v: any) => v.friend_id !== friend_id));
+        setCards((prev: any) =>
+            prev.filter((v: any) => v.friend_id !== friend_id),
+        );
     };
 
     useEffect(() => {
@@ -100,7 +104,6 @@ function Card({
             intervals.forEach(window.clearInterval);
         };
     }, [onTop]);
-
 
     const renderImages = (srcs: string[]) =>
         Array.from({ length: srcs.length }).map((_, idx) => (
@@ -160,11 +163,13 @@ function Card({
                         src={imgSrc}
                         className="max-h-15 rounded-full"
                     />
-                    <div className="flex w-full flex-col justify-between">
-                        <p className="text-3xl font-semibold">{friend_name}</p>
+                    <div className="flex max-w-3/4 flex-col justify-between">
+                        <p className="overflow-hidden text-3xl font-semibold overflow-ellipsis">
+                            {friend_name}
+                        </p>
                         <div className="flex items-center space-x-2">
                             <Tag size={15} />
-                            <p className="text-l">
+                            <p className="text-l overflow-hidden overflow-ellipsis whitespace-nowrap">
                                 {favoriteCategories.join(", ")}
                             </p>
                         </div>
