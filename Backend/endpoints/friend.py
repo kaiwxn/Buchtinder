@@ -13,7 +13,7 @@ def add_friend_match():
     friend_id = data.get("friend_id")
 
     if not user_id or not friend_id or user_id == friend_id:
-        return jsonify({'message': 'Missing required data fields'}), 400
+        return jsonify({'message': 'Invalid data'}), 400
     
     message, status = friend_service.add_friend_match(user_id, friend_id)
     return jsonify(message), status

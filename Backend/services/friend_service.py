@@ -4,6 +4,12 @@ from models import Users, UserToBooks, Friendships
 from database import db
 
 def add_friend_match(user_id: int, friend_id: str):
+
+    check_user_id = db.session.query(Users).filter_by(user_id=user_id).first()
+    check_friend_id = db.session.query(Users).filter_by(user_id=friend_id).first()
+    if not check_user_id or not check_friend_id:
+        return {"message": "User entries not found"}, 404
+
     exists = db.session.query(Friendships).filter(
         or_(
             and_(Friendships.user_id == user_id, Friendships.friend_id == friend_id),
