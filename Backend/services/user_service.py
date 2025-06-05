@@ -25,7 +25,7 @@ def registerUser(name: str, password: str):
     db.session.refresh(newUser)
 
     # Return session token
-    return {"message": "User registered successfully"}, 201
+    return {"message": "User registered successfully", "user_id": newUser.id}, 201
 
 
 def loginUser(name: str, password: str):
@@ -39,7 +39,7 @@ def loginUser(name: str, password: str):
     if not hmac.compare_digest(hashed_password, dbUser.password):
         return {"message": "Invalid credentials"}, 401
 
-    return {"message": "Login successful"}, 200
+    return {"message": "Login successful", "user_id": dbUser.id}, 200
 
 
 
