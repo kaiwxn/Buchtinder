@@ -12,8 +12,9 @@ def search_books():
     query = str(request.args.get("q", ""))
     search_page = int(request.args.get("page", 0))
     user_id = int(request.args.get("userID", 1))
+    orderBy = str(request.args.get("orderBy"))
     
-    result, status = book_service.search_books(query, search_page, user_id)
+    result, status = book_service.search_books(query, search_page, user_id, orderBy)
     return jsonify(result), status
 
 
