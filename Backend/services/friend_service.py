@@ -5,8 +5,8 @@ from database import db
 
 def add_friend_match(user_id: int, friend_id: str):
 
-    check_user_id = db.session.query(Users).filter_by(user_id=user_id).first()
-    check_friend_id = db.session.query(Users).filter_by(user_id=friend_id).first()
+    check_user_id = db.session.query(Users).filter_by(id=user_id).first()
+    check_friend_id = db.session.query(Users).filter_by(id=friend_id).first()
     if not check_user_id or not check_friend_id:
         return {"message": "User entries not found"}, 404
 
