@@ -61,7 +61,7 @@ class Reviews(Base):
         self.created_at = datetime.now(timezone.utc)
 
     def __repr__(self):
-        return f'<Review user_id={self.user_id!r}, book_id={self.book_id}>'
+        return f'<Review user_id={self.user_id!r}, book_id={self.book_id!r}>'
 
     
 class WeeklyBooks(Base):
@@ -76,3 +76,20 @@ class WeeklyBooks(Base):
 
     def __repr__(self):
         return f'<WeeklyBook {self.volume_id!r}>'
+    
+class Friendships(Base):
+    __tablename__ = 'Friendships'
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey('Users.id'), nullable=False)
+    friend_id = Column(Integer, ForeignKey('Users.id'), nullable=False)
+    created_at = Column(DateTime, default=datetime.now(timezone.utc), nullable=False)
+
+    __table_args__ = (UniqueConstraint('user_id', 'friend_id', name='unique_friendship'),)
+
+    def __init__(self, user_id=None, friend_id=None):
+        self.user_id = user_id
+        self.friend_id = friend_id
+        self.created_at = datetime.now(timezone.utc)
+
+    def __repr__(self):
+        return f'<Friendship user_id={self.user_id!r}, friend_id={self.friend_id!r}>'
