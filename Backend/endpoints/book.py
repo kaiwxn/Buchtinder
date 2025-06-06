@@ -46,11 +46,29 @@ def remove_book():
 
 
 
-@bookBlueprint.get('/get_from_user')
+@bookBlueprint.get('/get_volume_id_from_user')
+def get_volume_id_from_user():
+    user_id = request.args.get('user_id')
+    if not user_id:
+        return jsonify({'message': 'Missing user_id'}), 400
+
+    result, status = book_service.get_volume_id_from_user(user_id)
+    return jsonify(result), status
+
+
+
+@bookBlueprint.get('/get_books_from_user')
 def get_books_from_user():
     user_id = request.args.get('user_id')
     if not user_id:
         return jsonify({'message': 'Missing user_id'}), 400
 
-    result, status = book_service.get_books_from_user(user_id)
-    return jsonify(result), status
+    volumeIds, status = book_service.get_volume_id_from_user(user_id)
+
+    favoriteVolumes = []
+    for id in volumeIds:
+        book_info, status = book_service.fetch_book_info(id.get("volume_id"))
+        if book_info:
+            favoriteVolumes.append(book_info)
+
+    return jsonify(favoriteVolumes), status

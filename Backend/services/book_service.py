@@ -108,7 +108,7 @@ def remove_book(user_id: int, volume_id: str):
     return{'message': 'Successfully removed book'}, 200
 
 
-def get_books_from_user(user_id: int):
+def get_volume_id_from_user(user_id: int):
     books = db.session.query(UserToBooks).filter_by(user_id=user_id).all()
 
     results = []

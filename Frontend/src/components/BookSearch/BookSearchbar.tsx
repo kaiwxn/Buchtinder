@@ -3,12 +3,16 @@ import { Search } from "lucide-react";
 type BookSearchbarProps = {
     query: string;
     setQuery: (value: string) => void;
+    order: string;
+    setOrder: (value: string) => void;
     onManualSearch: () => void;
 };
 
 function BookSearchbar({
     query,
     setQuery,
+    order,
+    setOrder,
     onManualSearch,
 }: BookSearchbarProps) {
     const handleSearch = () => {
@@ -32,12 +36,14 @@ function BookSearchbar({
                 />
             </label>
 
-            <select className="select join-item w-fit">
-                <option disabled selected>
-                    Filter
-                </option>
-                <option>Neuste</option>
-                <option>Relevanteste</option>
+            <select
+                className="select join-item w-fit"
+                value={order}
+                onChange={(e) => setOrder(e.target.value)}
+                aria-label="Sortierung"
+            >
+                <option value="relevance">Relevanteste</option>
+                <option value="newest">Neuste</option>
             </select>
 
             <button

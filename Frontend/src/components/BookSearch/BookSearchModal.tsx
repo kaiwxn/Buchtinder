@@ -9,6 +9,8 @@ import { USER_ID } from "../../pages/Login/Login";
 function BookSearchModal({ onClose }: BookSearchModalProps) {
     const [query, setQuery] = useState(""); // Input value for the search bar
     const [lastQuery, setLastQuery] = useState(""); // Last search query
+    const [order, setOrder] = useState("relevance"); // Order of search results
+
     const [results, setResults] = useState<BookJsonObject[]>([]);
     const [savedBooks, setSavedBooks] = useState<Set<string>>(new Set());
     const [page, setPage] = useState(0);
@@ -18,18 +20,18 @@ function BookSearchModal({ onClose }: BookSearchModalProps) {
         setLoading(true);
         try {
             const response = await fetch(
-                `http://127.0.0.1:5000/books/search?q=${encodeURIComponent(q)}&page=${pageNumber}`,
+                `http://127.0.0.1:5000/books/search?q=${encodeURIComponent(q)}&page=${pageNumber}&userID=${USER_ID}&orderBy=${order}`,
             );
             if (!response.ok) {
                 throw new Error("Failed to fetch books");
             }
             const books = await response.json();
-            setResults(books);
             const saved: Set<string> = new Set(
                 (books as BookJsonObject[])
                     .filter((b: BookJsonObject) => b.isSaved)
-                    .map((b: BookJsonObject) => b.volume_id)
+                    .map((b: BookJsonObject) => b.volume_id),
             );
+            setResults(books);
             setSavedBooks(saved);
         } catch (error) {
             console.error("Error fetching books:", error);
@@ -83,7 +85,7 @@ function BookSearchModal({ onClose }: BookSearchModalProps) {
     useEffect(() => {
         scrollToTop();
         fetchBooks(lastQuery, page);
-    }, [lastQuery, page]);
+    }, [lastQuery, page, order]);
 
     useEffect(() => {
         const timeout = setTimeout(() => {
@@ -117,6 +119,8 @@ function BookSearchModal({ onClose }: BookSearchModalProps) {
                 <BookSearchbar
                     query={query}
                     setQuery={setQuery}
+                    order={order}
+                    setOrder={setOrder}
                     onManualSearch={() => {
                         setPage(0);
                         setLastQuery(query);

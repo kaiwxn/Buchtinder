@@ -8,32 +8,37 @@ import Books from "./pages/Books";
 import Footer from "./components/Footer";
 import Login from "./pages/Login/Login";
 
+import Profile from "./pages/Profil/Profil";
+import Settings from "./pages/Settings";
+
 import "./App.css";
 
 function App() {
-	const [token, setToken] = useState(
-		() => sessionStorage.getItem("token") || ""
-	);
-	
-	useEffect(() => {
-		token
-			? sessionStorage.setItem("token", token)
-			: sessionStorage.removeItem("token");
-	}, [token]);
+    const [token, setToken] = useState(
+        () => sessionStorage.getItem("token") || "",
+    );
 
-	return token ? (
-		<>
-			<Navbar />
-			<Routes>
-				<Route path="/" element={<Home />} />
-				<Route path="/freunde" element={<Friends />} />
-				<Route path="/buecher" element={<Books />} />
-			</Routes>
-			<Footer />
-		</>
-	) : (
-		<Login setToken={setToken} />
-	);
+    useEffect(() => {
+        token
+            ? sessionStorage.setItem("token", token)
+            : sessionStorage.removeItem("token");
+    }, [token]);
+
+    return token ? (
+        <>
+            <Navbar />
+            <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/freunde" element={<Friends />} />
+                <Route path="/buecher" element={<Books />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/settings" element={<Settings />} />
+            </Routes>
+            <Footer />
+        </>
+    ) : (
+        <Login setToken={setToken} />
+    );
 }
 
 export default App;
