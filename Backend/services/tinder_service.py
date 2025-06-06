@@ -7,8 +7,6 @@ from services.tinder_algorithm import find_similar_users
 def get_card_info(user_id:int):
     user_ids = find_similar_users(user_id)
     results = []
-    print("Input user_id:", user_id)
-    print("Similar users returned:", user_ids)
 
     for user_id in user_ids:
         user = db.session.query(Users).filter_by(id=user_id).first()
