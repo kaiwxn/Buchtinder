@@ -8,8 +8,8 @@ import Books from "./pages/Books";
 import Footer from "./components/Footer";
 import Login from "./pages/Login/Login";
 
-import Profile from "./components/Profil";
-import Settings from "./components/settings";
+import Profile from "./pages/Profil/Profil";
+import Settings from "./pages/Settings";
 
 import "./App.css";
 
