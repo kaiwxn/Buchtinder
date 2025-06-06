@@ -9,11 +9,11 @@ type CardProps = CardData & {
 };
 
 function Card({
-    friend_id,
-    friend_name,
-    imgSrc,
+    user_id,
+    username,
+    profileImage,
     favoriteCategories,
-    bookSrcs,
+    bookCoverSrcs,
     setCards,
     cards,
 }: CardProps) {
@@ -31,8 +31,8 @@ function Card({
     const scrollRefTop = useRef<HTMLDivElement | null>(null);
     const scrollRefBottom = useRef<HTMLDivElement | null>(null);
 
-    // Nur mit der obersten Karte wird interagiert 
-    const onTop = friend_id === cards[cards.length - 1]?.friend_id;
+    // Nur mit der obersten Karte wird interagiert
+    const onTop = user_id === cards[cards.length - 1]?.user_id;
 
 
     const addFriend = async () => {
@@ -44,7 +44,7 @@ function Card({
                 },
                 body: JSON.stringify({
                     user_id: sessionStorage.getItem("token"),
-                    friend_id: friend_id,
+                    friend_id: user_id,
                 }),
             });
             if (!response.ok) {
@@ -63,7 +63,7 @@ function Card({
             await addFriend();
         }
         setCards((prev: any) =>
-            prev.filter((v: any) => v.friend_id !== friend_id),
+            prev.filter((v: any) => v.user_id !== user_id),
         );
     };
     
@@ -76,7 +76,7 @@ function Card({
             duration: 0.3,
         });
         setCards((prev: any) =>
-            prev.filter((v: any) => v.friend_id !== friend_id),
+            prev.filter((v: any) => v.user_id !== user_id),
         );
     };
 
@@ -97,7 +97,7 @@ function Card({
                 const maxScrollLeft = el.scrollWidth - el.clientWidth;
 
                 el.scrollLeft += direction * step;
-                
+
                 // Wenn das Ende erreicht ist, Richtung umkehren
                 if (el.scrollLeft >= maxScrollLeft) direction = -1;
                 else if (el.scrollLeft <= 0) direction = 1;
@@ -149,7 +149,7 @@ function Card({
                     className="scrollbar-hide flex h-full w-full items-center space-x-6 overflow-x-auto px-6"
                     style={{ scrollbarWidth: "none" }}
                 >
-                    {renderImages(bookSrcs)}
+                    {renderImages(bookCoverSrcs)}
                 </div>
             </div>
             <div className="pointer-events-none top-0 mt-8 flex justify-around">
@@ -159,19 +159,19 @@ function Card({
                     style={{ scrollbarWidth: "none" }}
                 >
                     <div className="w-10"></div>
-                    {renderImages(bookSrcs)}
+                    {renderImages(bookCoverSrcs)}
                 </div>
             </div>
             <div className="absolute bottom-0 h-1/3 w-full rounded-b-lg p-4 text-white">
                 <div className="mx-5 mb-7 flex h-15 w-full items-center space-x-5">
                     <img
                         alt="User avatar"
-                        src={imgSrc}
+                        src={profileImage}
                         className="max-h-15 rounded-full"
                     />
                     <div className="flex max-w-3/4 flex-col justify-between">
                         <p className="overflow-hidden text-3xl font-semibold overflow-ellipsis">
-                            {friend_name}
+                            {username}
                         </p>
                         <div className="flex items-center space-x-2">
                             <Tag size={15} />

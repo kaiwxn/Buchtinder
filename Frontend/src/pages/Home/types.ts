@@ -1,8 +1,8 @@
 
 export type CardData = {
-    friend_id: number;
-    friend_name: string;
-    imgSrc: string;
+    user_id: number;
+    username: string;
+    profileImage: string;
     favoriteCategories: string[];
-    bookSrcs: string[];
+    bookCoverSrcs: string[];
 }

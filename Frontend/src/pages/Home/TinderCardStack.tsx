@@ -9,11 +9,11 @@ const BACKUP_PROFILE_IMAGE_SRC =
     "https://as1.ftcdn.net/jpg/03/53/11/00/1000_F_353110097_nbpmfn9iHlxef4EDIhXB1tdTD0lcWhG9.jpg";
 
 const cardsData = Array.from({ length: 5 }, (_, i) => ({
-    friend_id: i + 1,
-    friend_name: "Max " + (i + 1),
-    imgSrc: BACKUP_PROFILE_IMAGE_SRC,
+    user_id: i + 1,
+    username: "Max " + (i + 1),
+    profileImage: BACKUP_PROFILE_IMAGE_SRC,
     favoriteCategories: ["Fantasy", "Science Fiction", "Mystery", "Romance", "Thriller"],
-    bookSrcs: [
+    bookCoverSrcs: [
         BACKUP_IMAGE_SRC,
         BACKUP_IMAGE_SRC,
         BACKUP_IMAGE_SRC,
@@ -29,7 +29,7 @@ function CardStack() {
         <div className="mt-5 flex justify-center">
             {cards.map((card: CardData) => (
                 <Card
-                    key={card.friend_id}
+                    key={card.user_id}
                     {...card}
                     setCards={setCards}
                     cards={cards}
