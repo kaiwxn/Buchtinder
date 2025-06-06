@@ -14,8 +14,10 @@ type BookInfo = {
 
 function UserBookList() {
     const [books, setBooks] = useState<BookInfo[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
 
     const fetchBooks = async () => {
+        setLoading(true);
         try {
             const response = await fetch(
                 `http://127.0.0.1:5000/books/get_books_from_user?user_id=${sessionStorage.getItem("token")}`,
@@ -28,6 +30,7 @@ function UserBookList() {
         } catch (error) {
             console.error("Error fetching books:", error);
         } finally {
+            setLoading(false);
         }
     };
 
@@ -56,7 +59,13 @@ function UserBookList() {
             <h1 className="mb-10 text-4xl">Deine Lieblingsbücher</h1>
 
             <div className="h-[60vh] items-center justify-center space-y-4 overflow-y-auto">
-                {books.length === 0 ? (
+                {loading && (
+                    <div className="flex flex-col items-center justify-center space-y-4">
+                        <span className="loading loading-spinner loading-xl"></span>
+                        <p className="text-gray-500">Lade deine Bücher ...</p>
+                    </div>
+                )}
+                {books.length === 0 && !loading ? (
                     <div className="text-center text-gray-500">
                         Du hast noch keine Bücher gespeichert.
                     </div>
@@ -102,14 +111,3 @@ function UserBookList() {
 }
 
 export default UserBookList;
-
-// function Books(){
-//     return (
-//         <div className="px-4 sm:px-10 lg:px-60 justify-center min-h-screen mt-10">
-//             <h1 className="text-4xl">Books Page</h1>
-//             <p>Welcome to the Books page! </p>
-//         </div>
-//     );
-// }
-
-// export default Books;
