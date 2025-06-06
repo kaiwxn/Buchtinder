@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 
+const BACKUP_PROFILE_IMAGE_SRC =
+    "https://as1.ftcdn.net/jpg/03/53/11/00/1000_F_353110097_nbpmfn9iHlxef4EDIhXB1tdTD0lcWhG9.jpg";
+
 function UserDropdown() {
     const [showConfirm, setShowConfirm] = useState(false);
 
-    const [avatar, setAvatar] = useState(
-        "https://via.placeholder.com/100?text=Default",
-    );
+    const [avatar, setAvatar] = useState(BACKUP_PROFILE_IMAGE_SRC);
 
     useEffect(() => {
         const storedAvatar = localStorage.getItem("profile_avatar");

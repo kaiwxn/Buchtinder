@@ -11,6 +11,9 @@ interface ProfileData {
     avatarUrl: string;
 }
 
+const BACKUP_PROFILE_IMAGE_SRC =
+    "https://as1.ftcdn.net/jpg/03/53/11/00/1000_F_353110097_nbpmfn9iHlxef4EDIhXB1tdTD0lcWhG9.jpg";
+
 function Profile() {
     const [editMode, setEditMode] = useState(false);
 
@@ -23,9 +26,7 @@ function Profile() {
     const [bio, setBio] = useState("");
     const [twitter, setTwitter] = useState("");
     const [linkedin, setLinkedin] = useState("");
-    const [avatarUrl, setAvatarUrl] = useState(
-        "https://via.placeholder.com/100?text=Default",
-    );
+    const [avatarUrl, setAvatarUrl] = useState(BACKUP_PROFILE_IMAGE_SRC);
 
     const [tempAvatar, setTempAvatar] = useState(avatarUrl);
     const [showAvatarModal, setShowAvatarModal] = useState(false);
