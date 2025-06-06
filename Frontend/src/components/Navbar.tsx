@@ -19,7 +19,13 @@ function Navbar() {
         <>
             <nav className="navbar bg-base-100 w-full drop-shadow">
                 <div className="mr-4 flex-none">
-                    <BookCheck size={36} />
+                    
+                    <Link
+                        to="/"
+                        className="text-xl font-bold hover:underline hover:underline-offset-4 "
+                    >
+                        <BookCheck size={36} className="hover:scale-105" />
+                    </Link>
                 </div>
 
                 {navLinks.map((link) => (

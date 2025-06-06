@@ -157,7 +157,7 @@ function Card({
                 </div>
             </div>
             <div className="absolute bottom-0 h-1/3 w-full rounded-b-lg p-4 text-white">
-                <div className="mx-5 mb-10 flex h-15 w-full items-center space-x-5">
+                <div className="mx-5 mb-7 flex h-15 w-full items-center space-x-5">
                     <img
                         alt="User avatar"
                         src={imgSrc}
