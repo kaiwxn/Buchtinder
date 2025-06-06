@@ -39,7 +39,7 @@ def fetch_book_info(volume_id: str):
     }, 200
 
 # Searches google books for provided query
-def search_books(query: str, search_page: int, user_id: int, orderBy: str):
+def search_books(query: str, search_page: int, user_id: int):
     # Fetch the books matching the search query 
     # Search page starts from 0
     params = {
