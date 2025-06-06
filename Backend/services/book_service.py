@@ -38,16 +38,6 @@ def fetch_book_info(volume_id: str):
         'language': volume_info.get('language'),
     }, 200
 
-def validate_date(date):
-    if not date:
-        return datetime.max
-    for format in ('%Y-%m-%d', '%Y'):
-        try:
-            return datetime.strptime(date, format)
-        except ValueError:
-            continue
-    return datetime.max
-
 # Searches google books for provided query
 def search_books(query: str, search_page: int, user_id: int, orderBy: str):
     # Fetch the books matching the search query 
@@ -68,7 +58,6 @@ def search_books(query: str, search_page: int, user_id: int, orderBy: str):
 
     for item in data.get('items', []):
         volume_info = item.get('volumeInfo', {})
-        published_date = volume_info.get('publishedDate')
         identifiers = volume_info.get('industryIdentifiers', []) 
         
         isSavedbyUser = db.session.query(UserToBooks).filter_by(user_id=user_id, volume_id=item.get('id')).first()
@@ -89,12 +78,8 @@ def search_books(query: str, search_page: int, user_id: int, orderBy: str):
             'info_link': f'https://books.google.de/books?id={item.get('id')}',
             'categories': volume_info.get('categories', []),
             'language': volume_info.get('language'),
-            'published_date': published_date,
             'isSaved': isSaved
         })
-
-    if orderBy == 'newest':
-        results.sort(key=lambda e: validate_date(e['published_date']) or '', reverse=True)
 
     return results, 200
 
