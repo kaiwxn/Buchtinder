@@ -2,7 +2,7 @@ from database import db
 from models import Users, UserToBooks
 from services.book_service import fetch_book_info
 from collections import Counter
-from services.Informatik_Algorithmus_final import find_similar_users
+from services.tinder_algorithm import find_similar_users
 
 def get_card_info(user_id:int):
     user_ids = find_similar_users(user_id)
