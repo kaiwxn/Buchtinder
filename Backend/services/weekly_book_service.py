@@ -16,7 +16,7 @@ def get_weekly_book():
     if today.weekday() != 0 or (latest and latest.created_at.date() == today):
         if latest:
             volume_id = latest.volume_id
-            book_info = fetch_book_info(volume_id)
+            book_info, status = fetch_book_info(volume_id)
             return book_info, 200
         return {'message': 'No weekly book entry available'}, 404
 
@@ -38,5 +38,5 @@ def get_weekly_book():
     db.session.commit()
     db.session.refresh(newWeeklyBook)
 
-    book_info = fetch_book_info(volume_id)
+    book_info, status = fetch_book_info(volume_id)
     return book_info, 200
