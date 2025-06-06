@@ -14,9 +14,8 @@ import Settings from "./pages/Settings";
 import "./App.css";
 
 function App() {
-    const [token, setToken] = useState(
-        () => sessionStorage.getItem("token") || "",
-    );
+    
+    const [token, setToken] = useState(sessionStorage.getItem("token"));
 
     useEffect(() => {
         token

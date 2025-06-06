@@ -13,12 +13,12 @@ function Login({ setToken }: LoginProps) {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
-
+    
     async function handleLogin() {
         setLoading(true);
         try {
             const data = await login(username, password);
-            setToken(data.user_id); // TODO: change token
+            setToken(data.user_id); // TODO: Token ändern, falls Auth-Token benötigt wird. Exposte User-ID nicht sinnvoll
         } catch (error: any) {
             console.error("Fehler bei Login:", error);
             alert(

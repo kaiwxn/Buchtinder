@@ -1,6 +1,6 @@
 import { Heart, Tag, X } from "lucide-react";
 import { animate, motion, useMotionValue, useTransform } from "motion/react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { CardData } from "./types";
 
 type CardProps = CardData & {
@@ -17,18 +17,23 @@ function Card({
     setCards,
     cards,
 }: CardProps) {
+    // Zustand für die Kartenposition
     const cardX = useMotionValue(0);
+
+    // Falls die Karte gezogen wird, wird die Opazität und Rotation angepasst
     const rotateRaw = useTransform(cardX, [-150, 150], [-18, 18]);
     const opacity = useTransform(cardX, [-150, 0, 150], [0, 1, 0]);
-
-    const scrollRefTop = useRef<HTMLDivElement | null>(null);
-    const scrollRefBottom = useRef<HTMLDivElement | null>(null);
-
-    const onTop = friend_id === cards[cards.length - 1]?.friend_id;
-
     const rotate = useTransform(() => {
         return `${rotateRaw.get()}deg`;
     });
+
+    // Zustand für das automatischen scrolling beider Buchanzeigen
+    const scrollRefTop = useRef<HTMLDivElement | null>(null);
+    const scrollRefBottom = useRef<HTMLDivElement | null>(null);
+
+    // Nur mit der obersten Karte wird interagiert 
+    const onTop = friend_id === cards[cards.length - 1]?.friend_id;
+
 
     const addFriend = async () => {
         try {
@@ -51,22 +56,23 @@ function Card({
     };
 
     const handleDragEnd = async () => {
-        if (Math.abs(cardX.get()) > 100) {
-            // const direction = cardX.get() > 0 ? "right" : "left";
-            // if (direction === "right") {
-            //     await addFriend();
-            // }
-            setCards((prev: any) =>
-                prev.filter((v: any) => v.friend_id !== friend_id),
-            );
+        if (Math.abs(cardX.get()) <= 100) {
+            return;
         }
+        if (cardX.get() > 0) {
+            await addFriend();
+        }
+        setCards((prev: any) =>
+            prev.filter((v: any) => v.friend_id !== friend_id),
+        );
     };
+    
     const handleButtonSwipe = async (direction: "left" | "right") => {
-        const to = direction === "left" ? -200 : 200; // Swipe simulieren
+        const newX = direction === "left" ? -200 : 200; // Swipe simulieren
         if (direction === "right") {
             addFriend();
         }
-        await animate(cardX, to, {
+        await animate(cardX, newX, {
             duration: 0.3,
         });
         setCards((prev: any) =>
@@ -85,13 +91,14 @@ function Card({
 
             let direction = 1;
             const step = 1;
-            const speed = 15;
-
+            const speed = 15; // Geschwindigkeit des Scrollens in Millisekunden
+            
             const intervalId = window.setInterval(() => {
                 const maxScrollLeft = el.scrollWidth - el.clientWidth;
 
                 el.scrollLeft += direction * step;
-
+                
+                // Wenn das Ende erreicht ist, Richtung umkehren
                 if (el.scrollLeft >= maxScrollLeft) direction = -1;
                 else if (el.scrollLeft <= 0) direction = 1;
             }, speed);
