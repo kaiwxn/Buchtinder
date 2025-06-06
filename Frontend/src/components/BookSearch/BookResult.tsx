@@ -1,6 +1,7 @@
 import { Check, Plus } from "lucide-react";
 import { BookJsonObject } from "./types";
 import { useState } from "react";
+import { span } from "motion/react-client";
 
 type Props = {
     book: BookJsonObject;
@@ -30,7 +31,11 @@ function BookResultItem({ book, isSaved, handleAdd, handleRemove }: Props) {
                             {book.title}
                         </a>
                         <p className="mb-2 max-w-[150px] overflow-hidden text-ellipsis whitespace-nowrap sm:max-w-[300px]">
-                            {book.authors?.slice(0, 3).join(", ")}
+                            {book.authors?.slice(0, 3).join(", ") || (
+                                <span className="text-gray-500">
+                                    Unbekannt
+                                </span>
+                            )}
                         </p>
 
                         <div className="overflow max-w-[80%] justify-between space-x-2 whitespace-nowrap">

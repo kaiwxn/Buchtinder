@@ -1,7 +1,6 @@
 import { Heart, Tag, X } from "lucide-react";
 import { animate, motion, useMotionValue, useTransform } from "motion/react";
 import { useEffect, useRef, useState } from "react";
-import { USER_ID } from "../Login/Login";
 import { CardData } from "./types";
 
 type CardProps = CardData & {
@@ -39,7 +38,7 @@ function Card({
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    user_id: USER_ID,
+                    user_id: sessionStorage.getItem("token"),
                     friend_id: friend_id,
                 }),
             });

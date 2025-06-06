@@ -4,7 +4,6 @@ import { BookJsonObject, BookSearchModalProps } from "./types";
 import BookResultItem from "./BookResult";
 import BookSearchbar from "./BookSearchbar";
 import PageChanger from "./PageChanger";
-import { USER_ID } from "../../pages/Login/Login";
 
 function BookSearchModal({ onClose }: BookSearchModalProps) {
     const [query, setQuery] = useState(""); // Input value for the search bar
@@ -20,7 +19,7 @@ function BookSearchModal({ onClose }: BookSearchModalProps) {
         setLoading(true);
         try {
             const response = await fetch(
-                `http://127.0.0.1:5000/books/search?q=${encodeURIComponent(q)}&page=${pageNumber}&userID=${USER_ID}&orderBy=${order}`,
+                `http://127.0.0.1:5000/books/search?q=${encodeURIComponent(q)}&page=${pageNumber}&userID=${sessionStorage.getItem("token")}&orderBy=${order}`,
             );
             if (!response.ok) {
                 throw new Error("Failed to fetch books");
@@ -47,7 +46,7 @@ function BookSearchModal({ onClose }: BookSearchModalProps) {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    user_id: USER_ID,
+                    user_id: sessionStorage.getItem("token"),
                     volume_id: volume_id,
                 }),
             });
@@ -67,7 +66,7 @@ function BookSearchModal({ onClose }: BookSearchModalProps) {
                 method: "DELETE",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    user_id: USER_ID,
+                    user_id: sessionStorage.getItem("token"),
                     volume_id: volume_id,
                 }),
             });

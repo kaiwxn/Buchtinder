@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Check } from "lucide-react";
-import { USER_ID } from "./Login/Login";
 
 type BookInfo = {
     volume_id: string;
@@ -19,7 +18,7 @@ function UserBookList() {
     const fetchBooks = async () => {
         try {
             const response = await fetch(
-                `http://127.0.0.1:5000/books/get_books_from_user?user_id=${USER_ID}`,
+                `http://127.0.0.1:5000/books/get_books_from_user?user_id=${sessionStorage.getItem("token")}`,
             );
             if (!response.ok) {
                 throw new Error("Failed to fetch books");
@@ -38,7 +37,7 @@ function UserBookList() {
                 method: "DELETE",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    user_id: USER_ID,
+                    user_id: sessionStorage.getItem("token"),
                     volume_id: volume_id,
                 }),
             });
