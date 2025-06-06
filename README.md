@@ -1,11 +1,8 @@
-# Unser Projekt
-
-Das hier ist die Beschreibung unseres Projekts.
-
-In dieser Markup Datei kann man Texte verfassen.
+# Buchtinder
+Bücher? Tinder?
+Lesen ist nicht immer etwas Individuelles. Lerne Freunde mit ähnlichen Buchvorlieben kennen - und das im altbekannten Swipe-Format!
 
 ## Installation
-
 ### Backend
 Für das Backend müssen die Dependencies durch ein Virtual Environment installiert werden.
 Diese sind in der Datei "requirements.txt" gespeichert.
@@ -45,3 +42,6 @@ flask --app app run
 cd Frontend
 npm run dev
 ```
+
+## Credits
+Informatik 12/2
