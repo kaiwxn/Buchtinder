@@ -8,12 +8,18 @@ type CardProps = CardData & {
     cards: CardData[];
 };
 
+const BACKUP_IMAGE_SRC =
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQSiaxXHKRBmNrpzuius2fLvoyrPjPWiu2jDg&s";
+
+const BACKUP_PROFILE_IMAGE_SRC =
+    "https://as1.ftcdn.net/jpg/03/53/11/00/1000_F_353110097_nbpmfn9iHlxef4EDIhXB1tdTD0lcWhG9.jpg";
+
 function Card({
     user_id,
     username,
     profileImage,
-    favoriteCategories,
-    bookCoverSrcs,
+    top_categories,
+    thumbnails,
     setCards,
     cards,
 }: CardProps) {
@@ -33,7 +39,6 @@ function Card({
 
     // Nur mit der obersten Karte wird interagiert
     const onTop = user_id === cards[cards.length - 1]?.user_id;
-
 
     const addFriend = async () => {
         try {
@@ -62,11 +67,9 @@ function Card({
         if (cardX.get() > 0) {
             await addFriend();
         }
-        setCards((prev: any) =>
-            prev.filter((v: any) => v.user_id !== user_id),
-        );
+        setCards((prev: any) => prev.filter((v: any) => v.user_id !== user_id));
     };
-    
+
     const handleButtonSwipe = async (direction: "left" | "right") => {
         const newX = direction === "left" ? -200 : 200; // Swipe simulieren
         if (direction === "right") {
@@ -75,39 +78,38 @@ function Card({
         await animate(cardX, newX, {
             duration: 0.3,
         });
-        setCards((prev: any) =>
-            prev.filter((v: any) => v.user_id !== user_id),
-        );
+        setCards((prev: any) => prev.filter((v: any) => v.user_id !== user_id));
     };
 
     useEffect(() => {
         if (!onTop) return;
 
-        const scrollElements = [scrollRefTop.current, scrollRefBottom.current];
-        const intervals: number[] = [];
-
-        scrollElements.forEach((el) => {
+        const setupScroll = (el: HTMLDivElement | null) => {
             if (!el) return;
 
             let direction = 1;
             const step = 1;
-            const speed = 15; // Geschwindigkeit des Scrollens in Millisekunden
-            
-            const intervalId = window.setInterval(() => {
-                const maxScrollLeft = el.scrollWidth - el.clientWidth;
+            const speed = 15; // Update in milliseconds
 
+            const scroll = () => {
+                const maxScrollLeft = el.scrollWidth - el.clientWidth - 10; // 10px for padding
                 el.scrollLeft += direction * step;
 
-                // Wenn das Ende erreicht ist, Richtung umkehren
                 if (el.scrollLeft >= maxScrollLeft) direction = -1;
                 else if (el.scrollLeft <= 0) direction = 1;
-            }, speed);
+            };
 
-            intervals.push(intervalId);
-        });
+            const intervalId = setInterval(scroll, speed);
+            return () => clearInterval(intervalId);
+        };
+
+        const cleanups = [
+            setupScroll(scrollRefTop.current),
+            setupScroll(scrollRefBottom.current),
+        ].filter(Boolean); // remove undefined
 
         return () => {
-            intervals.forEach(window.clearInterval);
+            cleanups.forEach((cleanup) => cleanup?.());
         };
     }, [onTop]);
 
@@ -115,7 +117,7 @@ function Card({
         Array.from({ length: srcs.length }).map((_, idx) => (
             <img
                 key={idx}
-                src={srcs[idx]}
+                src={srcs[idx] || BACKUP_IMAGE_SRC}
                 alt={`Book Cover ${idx + 1}`}
                 className="h-32 w-24 rounded object-cover shadow-md"
             />
@@ -146,27 +148,33 @@ function Card({
             <div className="pointer-events-none top-0 mt-8 flex justify-around">
                 <div
                     ref={scrollRefTop}
-                    className="scrollbar-hide flex h-full w-full items-center space-x-6 overflow-x-auto px-6"
+                    className="scrollbar-hide flex h-full w-full items-center space-x-6 overflow-x-auto px-10"
                     style={{ scrollbarWidth: "none" }}
                 >
-                    {renderImages(bookCoverSrcs)}
+                    {renderImages(
+                        thumbnails.slice(0, Math.ceil(thumbnails.length / 2)),
+                    )}
                 </div>
             </div>
             <div className="pointer-events-none top-0 mt-8 flex justify-around">
                 <div
                     ref={scrollRefBottom}
-                    className="scrollbar-hide flex h-full w-full items-center space-x-6 overflow-x-auto px-6"
+                    className="scrollbar-hide flex h-full w-full items-center space-x-6 overflow-x-auto px-10"
                     style={{ scrollbarWidth: "none" }}
                 >
-                    <div className="w-10"></div>
-                    {renderImages(bookCoverSrcs)}
+                    {renderImages(
+                        thumbnails.slice(
+                            Math.floor(thumbnails.length / 2),
+                            thumbnails.length,
+                        ),
+                    )}
                 </div>
             </div>
             <div className="absolute bottom-0 h-1/3 w-full rounded-b-lg p-4 text-white">
                 <div className="mx-5 mb-7 flex h-15 w-full items-center space-x-5">
                     <img
                         alt="User avatar"
-                        src={profileImage}
+                        src={profileImage || BACKUP_PROFILE_IMAGE_SRC}
                         className="max-h-15 rounded-full"
                     />
                     <div className="flex max-w-3/4 flex-col justify-between">
@@ -176,7 +184,7 @@ function Card({
                         <div className="flex items-center space-x-2">
                             <Tag size={15} />
                             <p className="text-l overflow-hidden overflow-ellipsis whitespace-nowrap">
-                                {favoriteCategories.join(", ")}
+                                {top_categories.join(", ")}
                             </p>
                         </div>
                     </div>
