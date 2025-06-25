@@ -13,12 +13,15 @@ type BookInfo = {
 };
 
 function UserBookList() {
+    //Liste der Bücher des Nutzers
     const [books, setBooks] = useState<BookInfo[]>([]);
+    //Zustand des Ladeverhaltens der Seite
     const [loading, setLoading] = useState<boolean>(true);
 
     const fetchBooks = async () => {
         setLoading(true);
         try {
+            //Anfrage an das Backend mit dem im sessionStorage gespeicherten Token (user_id)
             const response = await fetch(
                 `http://127.0.0.1:5000/books/get_books_from_user?user_id=${sessionStorage.getItem("token")}`,
             );
@@ -47,9 +50,11 @@ function UserBookList() {
         } catch (error) {
             console.error("Fehler beim Entfernen:", error);
         }
+        //aktualisiert die Buchliste nach erfolgreichem Entfernen
         setBooks((prev) => prev.filter((book) => book.volume_id !== volume_id));
     };
 
+    //Lädt die Bücher einmalig beim ersten Rendern der Komponente
     useEffect(() => {
         fetchBooks();
     }, []);
@@ -59,18 +64,18 @@ function UserBookList() {
             <h1 className="mb-10 text-4xl">Deine Lieblingsbücher</h1>
 
             <div className="h-[60vh] items-center justify-center space-y-4 overflow-y-auto">
-                {loading && (
+                {loading && ( // Ladeanzeige, solange die Bücher geladen werden
                     <div className="flex flex-col items-center justify-center space-y-4">
                         <span className="loading loading-spinner loading-xl"></span>
                         <p className="text-gray-500">Lade deine Bücher ...</p>
                     </div>
                 )}
-                {books.length === 0 && !loading ? (
+                {books.length === 0 && !loading ? ( // Nachricht, wenn kein Buch vorhanden ist
                     <div className="text-center text-gray-500">
                         Du hast noch keine Bücher gespeichert.
                     </div>
                 ) : (
-                    books.map((book) => (
+                    books.map((book) => ( //Anzeige jedes gespeicherten Buches in der Ansicht
                         <div
                             key={book.volume_id}
                             className="flex max-w-3/4 items-center gap-4 rounded-lg border p-4 shadow-sm"
