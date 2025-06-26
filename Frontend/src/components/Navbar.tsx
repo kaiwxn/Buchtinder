@@ -45,7 +45,7 @@ function Navbar() {
                 <div className="flex-1"></div>
 
                 <button
-                    className="btn mr-3 border-blue-600 bg-blue-600 pr-3 pl-2 text-white"
+                    className="btn mr-3 border-black border-2 pr-3 pl-2 hover:bg-transparent hover:scale-101"
                     onClick={toggleShowBookSearch}
                 >
                     <BookPlus />

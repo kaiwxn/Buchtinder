@@ -62,9 +62,9 @@ function UserDropdown() {
                 <div
                     tabIndex={0}
                     role="button"
-                    className="btn btn-ghost btn-circle avatar"
+                    className="btn btn-ghost btn-circle avatar hover:scale-101"
                 >
-                    <div className="w-10 rounded-full">
+                    <div className="w-10 rounded-full hover:scale-101">
                         <img alt="User avatar" src={avatar} />
                     </div>
                 </div>
