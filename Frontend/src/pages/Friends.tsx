@@ -35,7 +35,7 @@ function Friends() {
     return (
         <div className="mt-10 min-h-screen justify-center px-4 sm:px-10 lg:px-60">
             <h1 className="text-4xl">Freunde</h1>
-            
+
             {friends.map((friend, index) => (
                 <div key={index}>
                     <div className="mt-5 flex h-24">
@@ -50,21 +50,31 @@ function Friends() {
 
                         <div className="flex p-5 pb-0">
                             <div>
-                                <p className="mb-1 line-clamp-1 text-xl font-medium overflow-ellipsis hover:underline">
+                                <p className="mb-1 line-clamp-1 text-xl font-medium overflow-ellipsis">
                                     {friend.name}
                                 </p>
                                 <p className="text-sm text-gray-500">
-                                    {friend.bookCount || "Keine"} Bücher,
-                                    am {friend.createdAt ? friend.createdAt.toLocaleDateString("de-DE") : "unbekannten Zeitpunkt"} beigetreten.
+                                    {friend.bookCount || "Keine"} Bücher, am{" "}
+                                    {friend.createdAt
+                                        ? friend.createdAt.toLocaleDateString(
+                                              "de-DE",
+                                          )
+                                        : "unbekannten Zeitpunkt"}{" "}
+                                    beigetreten.
                                 </p>
                             </div>
                         </div>
                     </div>
-                    <div className="divider"/>
+                    <div className="divider" />
                 </div>
             ))}
+            {friends.length === 0 && (
+                <p className="mt-5 text-lg text-gray-500">
+                    Du hast noch keine Freunde. Lade deine Freunde ein, um ihre
+                    Bücher zu sehen!
+                </p>
+            )}
         </div>
-
     );
 }
 
