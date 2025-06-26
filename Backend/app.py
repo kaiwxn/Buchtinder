@@ -8,6 +8,7 @@ from endpoints.weekly_book import weeklyBookBlueprint
 from endpoints.review import reviewBlueprint
 from endpoints.friend import friendBlueprint
 from endpoints.tinder import tinderBlueprint
+from endpoints.profile import profileBlueprint
 
 
 app = Flask(__name__)
@@ -20,6 +21,7 @@ app.register_blueprint(weeklyBookBlueprint, url_prefix='/weekly_book')
 app.register_blueprint(reviewBlueprint, url_prefix='/review')
 app.register_blueprint(friendBlueprint, url_prefix='/friends')
 app.register_blueprint(tinderBlueprint, url_prefix='/tinder')
+app.register_blueprint(profileBlueprint, url_prefix='/profile')
 
 
 # Database setup

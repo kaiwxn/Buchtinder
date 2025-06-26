@@ -11,7 +11,10 @@ class Users(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(255), unique=True, nullable=False)
     password = Column(String(512), nullable=False)
-    salt = Column(LargeBinary, nullable=False)  
+    salt = Column(LargeBinary, nullable=False)
+    email = Column(String(255), unique=True, nullable=True)
+    twitter = Column(String(255), unique=True, nullable=True)
+    linkedIn = Column(String(255), unique=True, nullable=True)
 
     created_at = Column(DateTime, default=datetime.now(timezone.utc), nullable=False)
 
